@@ -1,0 +1,2 @@
+# MMD_Auto_MaterialFX_Tool
+MMD Auto MaterialFX Tool MMDワンクリックマテリアルFXの自動生成ツール MMD一键生成材质FX工具
