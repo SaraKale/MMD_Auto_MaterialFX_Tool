@@ -1,0 +1,394 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Annotationnotes" xml:space="preserve">
+    <value>コメント</value>
+  </data>
+  <data name="DirectOverWrite" xml:space="preserve">
+    <value>ソースフォルダ</value>
+  </data>
+  <data name="directoverwrite_tips" xml:space="preserve">
+    <value>このオプションをチェックすると、手動で選択する必要
+なくマップフォルダに自動的に出力されます。</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>エクスポート</value>
+  </data>
+  <data name="ExportFolder" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="ExportOpenAfterFolder" xml:space="preserve">
+    <value>エクスポート後にフォルダを開く</value>
+  </data>
+  <data name="exportoptiontext" xml:space="preserve">
+    <value>選択項目のエクスポート</value>
+  </data>
+  <data name="ExportOption_ByID" xml:space="preserve">
+    <value>FXをID番号で出力</value>
+  </data>
+  <data name="ExportOption_ByImageName" xml:space="preserve">
+    <value>画像ファイル名出力FX</value>
+  </data>
+  <data name="ExportOption_ByMaterialName" xml:space="preserve">
+    <value>マテリアル名出力FX</value>
+  </data>
+  <data name="ExportOption_None" xml:space="preserve">
+    <value>なし</value>
+  </data>
+  <data name="exportoption_tips" xml:space="preserve">
+    <value>エクスポート時には、次のように選択できます。
+「なし」：設定せず、デフォルト出力。
+「画像ファイル名出力FX」:マップファイル名で命名された.fxファイルを出力します。
+「マテリアル名出力FX」:マテリアル名で命名された.fxファイルを出力します。
+「FXをID番号で出力」：ID番号に名前が付けられた.fxファイルを出力します。</value>
+  </data>
+  <data name="ExportSuccess" xml:space="preserve">
+    <value>マテリアルとテクスチャのエクスポートが完了しました！</value>
+  </data>
+  <data name="FileCopyError" xml:space="preserve">
+    <value>ファイルのコピーに失敗しました:{0}</value>
+  </data>
+  <data name="FileCopySuccess" xml:space="preserve">
+    <value>ファイル{0}コピー完了</value>
+  </data>
+  <data name="FileInUseError" xml:space="preserve">
+    <value>ファイルが占有されているので、関連プログラムを閉じて再試行してください。</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>ファイルが見つかりません</value>
+  </data>
+  <data name="FolderBrowserDialogDescription" xml:space="preserve">
+    <value>エクスポート先のフォルダを選択</value>
+  </data>
+  <data name="FormatException" xml:space="preserve">
+    <value>ファイル形式エラー</value>
+  </data>
+  <data name="FormTitle" xml:space="preserve">
+    <value>MMDワンクリックマテリアルFXの自動生成ツール</value>
+  </data>
+  <data name="FXlanguage_tips" xml:space="preserve">
+    <value>ここは.fxテキストを選択できるエンコーディング言語で、
+修正コードを表示するのに便利で、
+前のコメントオプションをチェックする必要があります。</value>
+  </data>
+  <data name="ImportPMXFile" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="IndexOutOfRangeException" xml:space="preserve">
+    <value>インデックスが配列限界を超えています</value>
+  </data>
+  <data name="inporttext" xml:space="preserve">
+    <value>PMXファイルのインポート</value>
+  </data>
+  <data name="inputfilebox_tips" xml:space="preserve">
+    <value>右ボタンをクリックして.pmxファイルをインポートしても、
+.pmxファイルをアドレスバーに直接ドラッグすることができます。</value>
+  </data>
+  <data name="InterfaceLanguage_English" xml:space="preserve">
+    <value>英語</value>
+  </data>
+  <data name="InterfaceLanguage_Japanese" xml:space="preserve">
+    <value>日本語</value>
+  </data>
+  <data name="InterfaceLanguage_SimplifiedChinese" xml:space="preserve">
+    <value>中国語簡体字</value>
+  </data>
+  <data name="InterfaceLanguage_TraditionalChinese" xml:space="preserve">
+    <value>中国語繁体字</value>
+  </data>
+  <data name="IOException" xml:space="preserve">
+    <value>ファイル読み書きエラー</value>
+  </data>
+  <data name="languagetext" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>英語</value>
+  </data>
+  <data name="Language_enUS" xml:space="preserve">
+    <value>英語</value>
+  </data>
+  <data name="Language_jaJP" xml:space="preserve">
+    <value>日本語</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>日本語</value>
+  </data>
+  <data name="Language_SimplifiedChinese" xml:space="preserve">
+    <value>中国語簡体字</value>
+  </data>
+  <data name="Language_TraditionalChinese" xml:space="preserve">
+    <value>中国語繁体字</value>
+  </data>
+  <data name="Language_zhCN" xml:space="preserve">
+    <value>中国語簡体字</value>
+  </data>
+  <data name="Language_zhTW" xml:space="preserve">
+    <value>中国語繁体字</value>
+  </data>
+  <data name="Materiallanguage" xml:space="preserve">
+    <value>FXテキスト言語</value>
+  </data>
+  <data name="MaterialLanguage_English" xml:space="preserve">
+    <value>英語</value>
+  </data>
+  <data name="MaterialLanguage_enUS" xml:space="preserve">
+    <value>英語</value>
+  </data>
+  <data name="MaterialLanguage_jaJP" xml:space="preserve">
+    <value>日本語</value>
+  </data>
+  <data name="MaterialLanguage_Japanese" xml:space="preserve">
+    <value>日本語</value>
+  </data>
+  <data name="MaterialLanguage_None" xml:space="preserve">
+    <value>なし</value>
+  </data>
+  <data name="MaterialLanguage_SimplifiedChinese" xml:space="preserve">
+    <value>中国語簡体字</value>
+  </data>
+  <data name="MaterialLanguage_TraditionalChinese" xml:space="preserve">
+    <value>中国語繁体字</value>
+  </data>
+  <data name="MaterialLanguage_zhCN" xml:space="preserve">
+    <value>中国語簡体字</value>
+  </data>
+  <data name="MaterialLanguage_zhTW" xml:space="preserve">
+    <value>中国語繁体字</value>
+  </data>
+  <data name="notebutton_tips" xml:space="preserve">
+    <value>コメントの説明をチェックし、FXテキスト言語を選択すると、
+関連する.fxファイルが出力され、
+テクスチャファイル名に基づいて自動的に同じ名前に変更されます。</value>
+  </data>
+  <data name="OpenFileDialogFilter" xml:space="preserve">
+    <value>PMX ファイル|*.pmx</value>
+  </data>
+  <data name="OpenFileDialogTitle" xml:space="preserve">
+    <value>PMXファイルを選択</value>
+  </data>
+  <data name="outputtext" xml:space="preserve">
+    <value>エクスポートパス</value>
+  </data>
+  <data name="Packagingimages" xml:space="preserve">
+    <value>画像をパスにコピー</value>
+  </data>
+  <data name="Packimages_tips" xml:space="preserve">
+    <value>このオプションをチェックすると、すべての画像
+がエクスポートフォルダにコピーされます。
+手動でパスを選択するときに使用することをお勧めします。</value>
+  </data>
+  <data name="Rendererlist_tips" xml:space="preserve">
+    <value>これはあなたのメインレンダリングを選択します。
+オプションを選択せず、デフォルトではなしの場合は、.
+txtと.emdマテリアル情報ファイルを直接出力し、
+任意のオプションを選択すると、.fxファイルが出力されます。</value>
+  </data>
+  <data name="Renderer_ikPolishShader" xml:space="preserve">
+    <value>ikPolishShader</value>
+  </data>
+  <data name="Renderer_None" xml:space="preserve">
+    <value>なし</value>
+  </data>
+  <data name="Renderer_PowerShader" xml:space="preserve">
+    <value>PowerShader</value>
+  </data>
+  <data name="Renderer_RayMMD" xml:space="preserve">
+    <value>Ray-MMD</value>
+  </data>
+  <data name="rendertext" xml:space="preserve">
+    <value>レンダラーを選択</value>
+  </data>
+  <data name="SelectInputOutput" xml:space="preserve">
+    <value>まず入力ファイルと出力フォルダを選択してください</value>
+  </data>
+  <data name="SourceDirectoryNotFound" xml:space="preserve">
+    <value>ソースフォルダ{0}は存在しません</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>完了</value>
+  </data>
+  <data name="TextureFileMissing" xml:space="preserve">
+    <value>マテリアルファイルがありません</value>
+  </data>
+  <data name="UnauthorizedAccess" xml:space="preserve">
+    <value>ファイルへのアクセス権限なし</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>不明なエラーが発生しました</value>
+  </data>
+  <data name="UnsupportedLanguageMessage" xml:space="preserve">
+    <value>サポートされていない言語設定: {0}</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>に警告</value>
+  </data>
+  <data name="ParsPmxerror" xml:space="preserve">
+    <value>PMXファイルの解析エラー</value>
+  </data>
+  <data name="OutCSVText" xml:space="preserve">
+    <value>CSVファイルを保存</value>
+  </data>
+  <data name="CSVtoButton" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="RreviewRMTips" xml:space="preserve">
+    <value>マテリアルプレビューウィンドウ
+これは、モデルマテリアルをプレビュー表示することができる関連リストであり、.csvファイルをエクスポートすることもできます。</value>
+  </data>
+  <data name="MaterialPreviewTitle" xml:space="preserve">
+    <value>マテリアルプレビューウィンドウ</value>
+  </data>
+  <data name="NameColumn" xml:space="preserve">
+    <value>日本語</value>
+  </data>
+  <data name="CopySuccessMessage" xml:space="preserve">
+    <value>内容がクリップボードにコピーされました！</value>
+  </data>
+  <data name="CopyMenuItemText" xml:space="preserve">
+    <value>レプリケーション</value>
+  </data>
+  <data name="CSVExportSuccessMessage" xml:space="preserve">
+    <value>CSVファイルのエクスポートに成功しました！</value>
+  </data>
+  <data name="SelectValidPMXFileMessage" xml:space="preserve">
+    <value>まず有効なPMXファイルを選択してください</value>
+  </data>
+  <data name="ErrorParsingPMXMessage" xml:space="preserve">
+    <value>PMXファイルエラーの解析</value>
+  </data>
+  <data name="FileCopySuccessMessage" xml:space="preserve">
+    <value>ファイルコピー完了</value>
+  </data>
+  <data name="FileInUseConsoleMessage" xml:space="preserve">
+    <value>ファイルが占有され、{0}ミリ秒待ってから再試行..。</value>
+  </data>
+  <data name="CopyFileAttemptMessage" xml:space="preserve">
+    <value>ファイルをコピーしようとしました:{0}から{0}（試行数：0}）</value>
+  </data>
+  <data name="notice" xml:space="preserve">
+    <value>に知らせる</value>
+  </data>
+</root>

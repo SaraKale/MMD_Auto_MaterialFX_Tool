@@ -1,0 +1,22 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PMX_Material_Tools.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Language" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+	<Setting Name="English" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+	<Setting Name="简体中文" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>	
+	<Setting Name="繁體中文" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+	<Setting Name="日本語" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>	
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,392 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Annotationnotes" xml:space="preserve">
+    <value>含注释</value>
+  </data>
+  <data name="DirectOverWrite" xml:space="preserve">
+    <value>源文件夹</value>
+  </data>
+  <data name="directoverwrite_tips" xml:space="preserve">
+    <value>勾选该选项会自动输出到贴图文件夹里面，
+无需手动选择。</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="ExportFolder" xml:space="preserve">
+    <value>浏览</value>
+  </data>
+  <data name="ExportOpenAfterFolder" xml:space="preserve">
+    <value>输出后自动打开文件夹</value>
+  </data>
+  <data name="exportoptiontext" xml:space="preserve">
+    <value>导出选项</value>
+  </data>
+  <data name="ExportOption_ByID" xml:space="preserve">
+    <value>按ID编号输出FX</value>
+  </data>
+  <data name="ExportOption_ByImageName" xml:space="preserve">
+    <value>按图片文件名输出FX</value>
+  </data>
+  <data name="ExportOption_ByMaterialName" xml:space="preserve">
+    <value>按材质名称输出FX</value>
+  </data>
+  <data name="ExportOption_None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="exportoption_tips" xml:space="preserve">
+    <value>导出时可以按照喜好选择：
+"无"：不设定，默认输出。
+"按图片文件名输出FX"：输出以贴图文件名命名的.fx文件。
+"按材质名称输出FX"：输出以材质名称命名的.fx文件。
+"按ID编号输出FX"：输出以ID数字编号命名的.fx文件。</value>
+  </data>
+  <data name="ExportSuccess" xml:space="preserve">
+    <value>材质和纹理导出成功！</value>
+  </data>
+  <data name="FileCopyError" xml:space="preserve">
+    <value>复制文件失败: {0}</value>
+  </data>
+  <data name="FileCopySuccess" xml:space="preserve">
+    <value>文件 {0} 复制成功</value>
+  </data>
+  <data name="FileInUseError" xml:space="preserve">
+    <value>文件被占用，请关闭相关程序后重试。</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>文件未找到</value>
+  </data>
+  <data name="FolderBrowserDialogDescription" xml:space="preserve">
+    <value>选择导出目标文件夹</value>
+  </data>
+  <data name="FormatException" xml:space="preserve">
+    <value>文件格式错误</value>
+  </data>
+  <data name="FormTitle" xml:space="preserve">
+    <value>MMD一键自动生成材质FX工具</value>
+  </data>
+  <data name="FXlanguage_tips" xml:space="preserve">
+    <value>这里是可以选择.fx文本的编码语言，
+更方便查看修改代码，
+需要勾选前面的注释选项。</value>
+  </data>
+  <data name="ImportPMXFile" xml:space="preserve">
+    <value>浏览</value>
+  </data>
+  <data name="IndexOutOfRangeException" xml:space="preserve">
+    <value>索引超出了数组界限</value>
+  </data>
+  <data name="inporttext" xml:space="preserve">
+    <value>导入PMX文件</value>
+  </data>
+  <data name="inputfilebox_tips" xml:space="preserve">
+    <value>点击右边按钮导入.pmx文件，
+也可以把 .pmx 文件直接拖入到地址栏里。</value>
+  </data>
+  <data name="InterfaceLanguage_English" xml:space="preserve">
+    <value>英语</value>
+  </data>
+  <data name="InterfaceLanguage_Japanese" xml:space="preserve">
+    <value>日语</value>
+  </data>
+  <data name="InterfaceLanguage_SimplifiedChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="InterfaceLanguage_TraditionalChinese" xml:space="preserve">
+    <value>繁体中文</value>
+  </data>
+  <data name="IOException" xml:space="preserve">
+    <value>文件读写错误</value>
+  </data>
+  <data name="languagetext" xml:space="preserve">
+    <value>界面语言</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>英语</value>
+  </data>
+  <data name="Language_enUS" xml:space="preserve">
+    <value>英语</value>
+  </data>
+  <data name="Language_jaJP" xml:space="preserve">
+    <value>日语</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>日语</value>
+  </data>
+  <data name="Language_SimplifiedChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="Language_TraditionalChinese" xml:space="preserve">
+    <value>繁体中文</value>
+  </data>
+  <data name="Language_zhCN" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="Language_zhTW" xml:space="preserve">
+    <value>繁体中文</value>
+  </data>
+  <data name="Materiallanguage" xml:space="preserve">
+    <value>FX文本语言</value>
+  </data>
+  <data name="MaterialLanguage_English" xml:space="preserve">
+    <value>英语</value>
+  </data>
+  <data name="MaterialLanguage_enUS" xml:space="preserve">
+    <value>英语</value>
+  </data>
+  <data name="MaterialLanguage_jaJP" xml:space="preserve">
+    <value>日语</value>
+  </data>
+  <data name="MaterialLanguage_Japanese" xml:space="preserve">
+    <value>日语</value>
+  </data>
+  <data name="MaterialLanguage_None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="MaterialLanguage_SimplifiedChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="MaterialLanguage_TraditionalChinese" xml:space="preserve">
+    <value>繁体中文</value>
+  </data>
+  <data name="MaterialLanguage_zhCN" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="MaterialLanguage_zhTW" xml:space="preserve">
+    <value>繁体中文</value>
+  </data>
+  <data name="notebutton_tips" xml:space="preserve">
+    <value>如果勾选注释说明，同时选择了FX文本语言，
+将会输出相关的.fx文件，根据纹理文件名
+自动重命名为相同的名称。</value>
+  </data>
+  <data name="OpenFileDialogFilter" xml:space="preserve">
+    <value>PMX 文件|*.pmx</value>
+  </data>
+  <data name="OpenFileDialogTitle" xml:space="preserve">
+    <value>选择PMX文件</value>
+  </data>
+  <data name="outputtext" xml:space="preserve">
+    <value>导出路径</value>
+  </data>
+  <data name="Packagingimages" xml:space="preserve">
+    <value>复制源图片到输出路径</value>
+  </data>
+  <data name="Packimages_tips" xml:space="preserve">
+    <value>勾选该选项会将所有图片复制到导出文件夹，
+建议手动选择路径时使用。</value>
+  </data>
+  <data name="Rendererlist_tips" xml:space="preserve">
+    <value>这是选择你的主渲染，如果不选择任何选项，默认是无，
+则直接输出.txt和.emd材质信息文件，
+选择任意选项，会输出.fx文件。</value>
+  </data>
+  <data name="Renderer_ikPolishShader" xml:space="preserve">
+    <value>ikPolishShader</value>
+  </data>
+  <data name="Renderer_None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="Renderer_PowerShader" xml:space="preserve">
+    <value>PowerShader</value>
+  </data>
+  <data name="Renderer_RayMMD" xml:space="preserve">
+    <value>Ray-MMD</value>
+  </data>
+  <data name="rendertext" xml:space="preserve">
+    <value>选择渲染器</value>
+  </data>
+  <data name="SelectInputOutput" xml:space="preserve">
+    <value>请先选择输入文件和输出文件夹</value>
+  </data>
+  <data name="SourceDirectoryNotFound" xml:space="preserve">
+    <value>源文件夹 {0} 不存在</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="TextureFileMissing" xml:space="preserve">
+    <value>缺少材质文件</value>
+  </data>
+  <data name="UnauthorizedAccess" xml:space="preserve">
+    <value>无权限访问文件</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>发生未知错误</value>
+  </data>
+  <data name="UnsupportedLanguageMessage" xml:space="preserve">
+    <value>不支持的语言设置: {0}</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="ParsPmxerror" xml:space="preserve">
+    <value>解析PMX文件出错</value>
+  </data>
+  <data name="OutCSVText" xml:space="preserve">
+    <value>导出CSV文件</value>
+  </data>
+  <data name="CSVtoButton" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="RreviewRMTips" xml:space="preserve">
+    <value>材质预览窗口
+这是可以预览查看模型材质的相关列表，同时还可以导出 .csv 文件。</value>
+  </data>
+  <data name="MaterialPreviewTitle" xml:space="preserve">
+    <value>材质预览窗口</value>
+  </data>
+  <data name="NameColumn" xml:space="preserve">
+    <value>日文名称</value>
+  </data>
+  <data name="CopySuccessMessage" xml:space="preserve">
+    <value>内容已复制到剪贴板！</value>
+  </data>
+  <data name="CopyMenuItemText" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="CSVExportSuccessMessage" xml:space="preserve">
+    <value>CSV 文件导出成功！</value>
+  </data>
+  <data name="SelectValidPMXFileMessage" xml:space="preserve">
+    <value>请先选择一个有效的 PMX 文件</value>
+  </data>
+  <data name="ErrorParsingPMXMessage" xml:space="preserve">
+    <value>解析PMX文件错误</value>
+  </data>
+  <data name="FileCopySuccessMessage" xml:space="preserve">
+    <value>文件复制成功消息框</value>
+  </data>
+  <data name="FileInUseConsoleMessage" xml:space="preserve">
+    <value>文件被占用，等待 {0} 毫秒后重试..</value>
+  </data>
+  <data name="CopyFileAttemptMessage" xml:space="preserve">
+    <value>尝试复制文件: {0} 到 {0} (尝试次数: 0})</value>
+  </data>
+  <data name="notice" xml:space="preserve">
+    <value>通知</value>
+  </data>
+</root>

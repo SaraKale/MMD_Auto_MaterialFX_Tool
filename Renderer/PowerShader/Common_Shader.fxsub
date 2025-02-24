@@ -1,0 +1,684 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  Common_Shader.fxsub
+//  作成: 舞力介入P
+//  改変: 角砂糖
+//
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include "Config.fxsub"
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// パラメータ宣言
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// ■ ExcellentShadowシステム
+
+float X_SHADOWPOWER = 1.0;   //アクセサリ影濃さ
+float PMD_SHADOWPOWER = 0.2; //モデル影濃さ
+
+
+//スクリーンシャドウマップ取得
+shared texture2D ScreenShadowMapProcessed : RENDERCOLORTARGET <
+    float2 ViewPortRatio = {1.0,1.0};
+    int MipLevels = 1;
+    string Format = "D3DFMT_R16F";
+>;
+sampler2D ScreenShadowMapProcessedSamp = sampler_state {
+    texture = <ScreenShadowMapProcessed>;
+    MinFilter = LINEAR; MagFilter = LINEAR; MipFilter = NONE;
+    AddressU  = CLAMP; AddressV = CLAMP;
+};
+
+//SSAOマップ取得
+shared texture2D ExShadowSSAOMapOut : RENDERCOLORTARGET <
+    float2 ViewPortRatio = {1.0,1.0};
+    int MipLevels = 1;
+    string Format = "R16F";
+>;
+
+sampler2D ExShadowSSAOMapSamp = sampler_state {
+    texture = <ExShadowSSAOMapOut>;
+    MinFilter = LINEAR; MagFilter = LINEAR; MipFilter = NONE;
+    AddressU  = CLAMP; AddressV = CLAMP;
+};
+
+// スクリーンサイズ
+float2 ES_ViewportSize : VIEWPORTPIXELSIZE;
+static float2 ES_ViewportOffset = (float2(0.5,0.5)/ES_ViewportSize);
+
+bool Exist_ExcellentShadow : CONTROLOBJECT < string name = "ExcellentShadow.x"; >;
+bool Exist_ExShadowSSAO : CONTROLOBJECT < string name = "ExShadowSSAO.x"; >;
+float ShadowRate : CONTROLOBJECT < string name = "ExcellentShadow.x"; string item = "Tr"; >;
+float3   ES_CameraPos1      : POSITION  < string Object = "Camera"; >;
+float es_size0 : CONTROLOBJECT < string name = "ExcellentShadow.x"; string item = "Si"; >;
+float4x4 es_mat1 : CONTROLOBJECT < string name = "ExcellentShadow.x"; >;
+
+static float3 es_move1 = float3(es_mat1._41, es_mat1._42, es_mat1._43 );
+static float CameraDistance1 = length(ES_CameraPos1 - es_move1); //カメラとシャドウ中心の距離
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+
+// 座法変換行列
+float4x4 WorldViewProjMatrix      : WORLDVIEWPROJECTION;
+float4x4 WorldMatrix              : WORLD;
+float4x4 ViewMatrix               : VIEW;
+float4x4 LightWorldViewProjMatrix : WORLDVIEWPROJECTION < string Object = "Light"; >;
+
+float3   LightDirection    : DIRECTION < string Object = "Light"; >;
+float3   CameraPosition    : POSITION  < string Object = "Camera"; >;
+
+// マテリアル色
+float4   MaterialDiffuse   : DIFFUSE  < string Object = "Geometry"; >;
+float3   MaterialAmbient   : AMBIENT  < string Object = "Geometry"; >;
+float3   MaterialEmmisive  : EMISSIVE < string Object = "Geometry"; >;
+float3   MaterialSpecular  : SPECULAR < string Object = "Geometry"; >;
+float    SpecularPower     : SPECULARPOWER < string Object = "Geometry"; >;
+float3   MaterialToon      : TOONCOLOR;
+float4   EdgeColor         : EDGECOLOR;
+// ライト色
+float3   LightDiffuse      : DIFFUSE   < string Object = "Light"; >;
+float3   LightAmbient      : AMBIENT   < string Object = "Light"; >;
+float3   LightSpecular     : SPECULAR  < string Object = "Light"; >;
+static float4 DiffuseColor  = MaterialDiffuse  * float4(LightDiffuse, 1.0f);
+static float3 AmbientColor  = MaterialAmbient  * LightAmbient + MaterialEmmisive;
+static float3 SpecularColor = MaterialSpecular * LightSpecular;
+
+// テクスチャ材質モーフ値
+float4   TextureAddValue   : ADDINGTEXTURE;
+float4   TextureMulValue   : MULTIPLYINGTEXTURE;
+float4   SphereAddValue    : ADDINGSPHERETEXTURE;
+float4   SphereMulValue    : MULTIPLYINGSPHERETEXTURE;
+
+// フラグ
+bool use_texture;
+bool use_spheremap;
+bool use_toon;
+bool use_subtexture;
+bool parthf;
+bool transp;
+bool spadd;
+#define SKII1    1500
+#define SKII2    8000
+#define Toon     3
+
+// コントローラ用パラメータ
+float LightP1      : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "ライト強く"; >;
+float LightM1      : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "ライト弱く"; >;
+float ShadowP1     : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "影強く"; >;
+float ShadowM1     : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "影弱く"; >;
+float ShadowAddR1  : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "影赤+"; >;
+float ShadowAddG1  : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "影緑+"; >;
+float ShadowAddB1  : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "影青+"; >;
+float FogColorR    : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "フォグ赤+"; >;
+float FogColorG    : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "フォグ緑+"; >;
+float FogColorB    : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "フォグ青+"; >;
+float FogDepth     : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "フォグでやすさ"; >;
+float FogPower     : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "フォグ透明度"; >;
+float mEmissiveP1  : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "発光強度"; >;
+float mEmissiveM1  : CONTROLOBJECT < string name = MAINCONT_NAME; string item = "発光強度弱"; >;
+
+// モデル組み込みパラメータ
+float LightP2      : CONTROLOBJECT < string name = "(self)"; string item = "ライト強く"; >;
+float LightM2      : CONTROLOBJECT < string name = "(self)"; string item = "ライト弱く"; >;
+float ShadowP2     : CONTROLOBJECT < string name = "(self)"; string item = "影強く"; >;
+float ShadowM2     : CONTROLOBJECT < string name = "(self)"; string item = "影弱く"; >;
+float ShadowAddR2  : CONTROLOBJECT < string name = "(self)"; string item = "影赤+"; >;
+float ShadowAddG2  : CONTROLOBJECT < string name = "(self)"; string item = "影緑+"; >;
+float ShadowAddB2  : CONTROLOBJECT < string name = "(self)"; string item = "影青+"; >;
+float mEmissiveP2  : CONTROLOBJECT < string name = "(self)"; string item = "発光強度"; >;
+float mEmissiveM2  : CONTROLOBJECT < string name = "(self)"; string item = "発光強度弱"; >;
+
+// パラメータ合成
+static float LightMul = (1.0 + LightP1) * (1.0 - LightM1) * (1.0 + LightP2) * (1.0 - LightM2) * LightPower;
+static float ShadowP = (1.0 - ShadowP1) * (1.0 - ShadowP2) * ShadowPower;
+static float ShadowM = 1.0 - (1.0 - ShadowM1) * (1.0 - ShadowM2);
+static float3 ShadowAdd = float3(ShadowAddR1, ShadowAddG1, ShadowAddB1) + float3(ShadowAddR2, ShadowAddG2, ShadowAddB2);
+static float EmissiveInt = (1.0 + mEmissiveP1 * 9.0) * (1.0 - mEmissiveM1) * (1.0 + mEmissiveP2 * 9.0) * (1.0 - mEmissiveM2) * EmissiveScale;
+static float3 FogColor = FogDefColor + float3(FogColorR, FogColorG, FogColorB);
+static float2 fog1 = float2(0.0, (1.0-FogDepth)*6000);
+static float2 fog2 = float2(BottomFog, 20111);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// テクスチャ
+
+// オブジェクトのテクスチャ
+texture ObjectTexture: MATERIALTEXTURE;
+sampler ObjTexSampler = sampler_state {
+    texture = <ObjectTexture>;
+    MINFILTER = LINEAR;
+    MAGFILTER = LINEAR;
+    MIPFILTER = LINEAR;
+    ADDRESSU  = WRAP;
+    ADDRESSV  = WRAP;
+};
+
+// スフィアマップのテクスチャ
+#if NORMAL_FROM != 1
+texture ObjectSphereMap: MATERIALSPHEREMAP;
+sampler ObjSphareSampler = sampler_state {
+    texture = <ObjectSphereMap>;
+    MINFILTER = LINEAR;
+    MAGFILTER = LINEAR;
+    MIPFILTER = LINEAR;
+    ADDRESSU  = WRAP;
+    ADDRESSV  = WRAP;
+};
+#endif
+
+// トゥーンマップのテクスチャ
+texture ObjectToonTexture: MATERIALTOONTEXTURE;
+sampler ObjToonSampler = sampler_state {
+    texture = <ObjectToonTexture>;
+    MINFILTER = LINEAR;
+    MAGFILTER = LINEAR;
+    MIPFILTER = NONE;
+    ADDRESSU  = CLAMP;
+    ADDRESSV  = CLAMP;
+};
+
+// シェーディングのヒント用テクスチャ
+#if TOON_ENABLE == 1
+texture2D ThresholdTexture: TEXTURE <
+    string ResourceName = THRESHOLD_TEXTURE;
+>;
+sampler2D ThresholdTextureSampler = sampler_state {
+    texture = <ThresholdTexture>;
+    MINFILTER = LINEAR;
+    MAGFILTER = LINEAR;
+    MIPFILTER = NONE;
+    ADDRESSU  = CLAMP;
+    ADDRESSV  = CLAMP;
+};
+#endif
+
+// 発光用のテクスチャ
+#if EMISSIVE_FROM == 2
+texture EmissiveTexture: TEXTURE <
+    string ResourceName = EMISSIVE_TEXTURE;
+>;
+sampler EmissiveTexSampler = sampler_state {
+    texture = <EmissiveTexture>;
+    MINFILTER = LINEAR;
+    MAGFILTER = LINEAR;
+    MIPFILTER = LINEAR;
+    ADDRESSU  = WRAP;
+    ADDRESSV  = WRAP;
+};
+#endif
+
+// ノーマルマップのテクスチャ
+#if NORMAL_FROM == 1
+texture NormalTexture: MATERIALSPHEREMAP;
+#elif NORMAL_FROM == 2
+texture NormalTexture: TEXTURE <
+    string ResourceName = NORMAL_TEXTURE;
+>;
+#endif
+#if NORMAL_FROM
+sampler NormalTexSampler = sampler_state {
+    texture = <NormalTexture>;
+    MINFILTER = ANISOTROPIC;
+    MAGFILTER = ANISOTROPIC;
+    MIPFILTER = ANISOTROPIC;
+    MAXANISOTROPY = 16;
+    ADDRESSU  = WRAP;
+    ADDRESSV  = WRAP;
+};
+#endif
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// 関数
+
+// 接空間取得
+inline float3x3 compute_tangent_frame(float3 Normal, float3 View, float2 UV)
+{
+    float3 dp1 = ddx(View);
+    float3 dp2 = ddy(View);
+    float2 duv1 = ddx(UV);
+    float2 duv2 = ddy(UV);
+
+    float3x3 M = float3x3(dp1, dp2, cross(dp1, dp2));
+    float2x3 inverseM = float2x3(cross(M[1], M[2]), cross(M[2], M[0]));
+    float3 Tangent = mul(float2(duv1.x, duv2.x), inverseM);
+    float3 Binormal = mul(float2(duv1.y, duv2.y), inverseM);
+
+    return float3x3(normalize(Tangent), normalize(Binormal), Normal);
+}
+
+// ノーマルマップ
+inline float3 GetNormal(sampler2D Sampler, float2 coord)
+{
+    float3 NormalMap = tex2D(Sampler, coord * float2(NormalLoop,NormalLoop)).rgb * 2 - 1;
+    return float3(NormalMap.rg * NormalScale, NormalMap.b);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// シェーダー（エッジ用）
+
+#if FOG_ENABLE == 1
+struct VS_OUTPUT_E {
+    float4 Pos        : POSITION;    // 射影変換座標
+    float4 PosW       : TEXCOORD0;   // 変換済み座標
+};
+
+VS_OUTPUT_E Edge_VS(float4 Pos : POSITION)
+{
+    VS_OUTPUT_E Out = (VS_OUTPUT_E)0;
+    // カメラ視点のワールドビュー射影変換
+    Out.Pos = mul(Pos, WorldViewProjMatrix);
+    Out.PosW = mul(Pos, WorldMatrix);
+    
+    return Out;
+}
+
+float4 Edge_PS(VS_OUTPUT_E IN) : COLOR
+{
+    // フォグ適用
+    IN.PosW.xyz/=IN.PosW.w;
+    IN.PosW.w = distance(IN.PosW.xyz,CameraPosition);
+    float4 pos = IN.PosW;
+    float f1 = 1.0-pow(1.0-pow(saturate((pos.w-fog1.x)/(fog1.y-fog1.x)), FogParam.x), FogParam.y);
+    float f2 = pow(1.0-pow(saturate((pos.y-fog2.x)/(fog2.y-fog2.x)), FogParam.x), FogParam.y);
+    EdgeColor.rgb = lerp(EdgeColor.rgb, FogColor, f1*f2*(1-FogPower));
+    return EdgeColor;
+}
+#endif
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// シェーダー（セルフシャドウOFF）
+
+struct VS_OUTPUT {
+    float4 Pos        : POSITION;    // 射影変換座標
+    float2 Tex        : TEXCOORD1;   // テクスチャ
+    float3 Normal     : TEXCOORD2;   // 法線
+    float3 Eye        : TEXCOORD3;   // カメラとの相対位置
+    float2 SpTex      : TEXCOORD4;   // スフィアマップテクスチャ座標
+    float4 Color      : COLOR0;      // ディフューズ色
+#if FOG_ENABLE == 1
+    float4 PosW       : TEXCOORD5;   // 変換済み座標
+#endif
+};
+
+VS_OUTPUT Basic_VS(float4 Pos : POSITION, float3 Normal : NORMAL, float2 Tex : TEXCOORD0, float2 Tex2 : TEXCOORD1)
+{
+    VS_OUTPUT Out = (VS_OUTPUT)0;
+    
+    // カメラ視点のワールドビュー射影変換
+    Out.Pos = mul( Pos, WorldViewProjMatrix );
+    
+#if FOG_ENABLE == 1
+    // フォグ用深度
+    Out.PosW = mul(Pos, WorldMatrix);
+#endif
+    
+    // カメラとの相対位置
+    Out.Eye = CameraPosition - mul( Pos, WorldMatrix );
+    // 頂点法線
+    Out.Normal = normalize( mul( Normal, (float3x3)WorldMatrix ) );
+    
+    // ディフューズ色＋アンビエント色 計算
+    Out.Color.rgb = AmbientColor;
+    Out.Color.rgb += lerp(max(0,dot( Out.Normal, -LightDirection )) * DiffuseColor.rgb, 0, use_toon);
+    Out.Color.a = DiffuseColor.a;
+    Out.Color = saturate( Out.Color );
+    
+    // テクスチャ座標
+    Out.Tex = Tex;
+    
+    float2 NormalWV = mul( Out.Normal, (float3x3)ViewMatrix );
+    Out.SpTex.x = use_subtexture ? Tex2.x : NormalWV.x * 0.5f + 0.5f;
+    Out.SpTex.y = use_subtexture ? Tex2.y : NormalWV.y * -0.5f + 0.5f;
+    
+    return Out;
+}
+
+float4 Basic_PS(VS_OUTPUT IN) : COLOR0
+{
+    // ノーマルマップ適用
+#if NORMAL_FROM == 1
+    float3x3 tangentFrame = compute_tangent_frame(IN.Normal, IN.Eye, IN.Tex);
+    float3 normal = use_spheremap ? normalize(mul(GetNormal(NormalTexSampler, IN.Tex), tangentFrame)) : normalize(IN.Normal);
+#elif NORMAL_FROM == 2
+    float3x3 tangentFrame = compute_tangent_frame(IN.Normal, IN.Eye, IN.Tex);
+    float3 normal = normalize(mul(GetNormal(NormalTexSampler, IN.Tex), tangentFrame));
+    // スフィアのテクスチャ座標
+    float2 NormalWV = mul( normal, (float3x3)ViewMatrix );
+    IN.SpTex.x = use_subtexture ? IN.SpTex.x : NormalWV.x * 0.5f + 0.5f;
+    IN.SpTex.y = use_subtexture ? IN.SpTex.y : NormalWV.y * -0.5f + 0.5f;
+#else
+    float3 normal = normalize(IN.Normal);
+#endif
+    
+    float4 Color = IN.Color;
+    
+    // テクスチャ適用
+    Color *= use_texture ? tex2D(ObjTexSampler,IN.Tex) : 1;
+    
+#if NORMAL_FROM != 1
+    // スフィアマップ適用
+    float4 TexColor = tex2D(ObjSphareSampler,IN.SpTex);
+    Color.rgb = use_spheremap ? (spadd ? Color.rgb + TexColor.rgb : Color.rgb * TexColor.rgb) : Color.rgb;
+    Color.a *= use_spheremap ? TexColor.a : 1;
+#endif
+    
+    // トゥーン適用
+    Color *= use_toon ? tex2D(ObjToonSampler, float2(0, 0.5-dot(normal,-LightDirection)*0.5)) : 1;
+    
+    // スペキュラ適用
+    Color.rgb += pow( max(0,dot( normalize( normalize(IN.Eye) + -LightDirection ), normal )), SpecularPower ) * SpecularColor;
+    
+    // パラメータ適用
+    Color.rgb *= LightMul;
+    
+#if FOG_ENABLE == 1
+    // フォグ適用
+    IN.PosW.xyz/=IN.PosW.w;
+    IN.PosW.w = distance(IN.PosW.xyz,CameraPosition);
+    float4 pos = IN.PosW;
+    float f1 = 1.0-pow(1.0-pow(saturate((pos.w-fog1.x)/(fog1.y-fog1.x)), FogParam.x), FogParam.y);
+    float f2 = pow(1.0-pow(saturate((pos.y-fog2.x)/(fog2.y-fog2.x)), FogParam.x), FogParam.y);
+    Color.rgb = lerp(Color.rgb, FogColor, f1*f2*(1.0f-FogPower));
+#endif
+    
+    // 発光抑え
+    Color.rgb = lerp(Color.rgb, saturate(Color.rgb), Saturate);
+    
+    // 発光色適用
+#if EMISSIVE_FROM == 1
+    Color.rgb += use_texture ? tex2D(ObjTexSampler, IN.Tex).rgb * EmissiveInt : 0;
+#elif EMISSIVE_FROM == 2
+    Color.rgb += tex2D(EmissiveTexSampler, IN.Tex).rgb * EmissiveInt;
+#endif
+    
+    return Color;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// シェーダー（セルフシャドウON）
+
+// シャドウバッファのサンプラ。"register(s0)"なのはMMDがs0を使っているから
+sampler DefSampler : register(s0);
+
+struct BufferShadow_OUTPUT {
+    float4 Pos      : POSITION;     // 射影変換座標
+    float4 ZCalcTex : TEXCOORD0;    // Z値
+    float2 Tex      : TEXCOORD1;    // テクスチャ
+    float3 Normal   : TEXCOORD2;    // 法線
+    float3 Eye      : TEXCOORD3;    // カメラとの相対位置
+    float2 SpTex    : TEXCOORD4;    // スフィアマップテクスチャ座標
+    float4 Color    : COLOR0;       // ディフューズ色
+#if FOG_ENABLE == 1
+    float4 PosW     : TEXCOORD5;    // 変換済み座標
+#endif
+    float4 ScreenTex : TEXCOORD6;   // スクリーン座標
+};
+
+BufferShadow_OUTPUT BufferShadow_VS(float4 Pos : POSITION, float3 Normal : NORMAL, float2 Tex : TEXCOORD0, float2 Tex2 : TEXCOORD1)
+{
+    BufferShadow_OUTPUT Out = (BufferShadow_OUTPUT)0;
+
+    // カメラ視点のワールドビュー射影変換
+    Out.Pos = mul( Pos, WorldViewProjMatrix );
+    
+#if FOG_ENABLE == 1
+    // フォグ用深度
+    Out.PosW = mul(Pos, WorldMatrix);
+#endif
+    
+    // カメラとの相対位置
+    Out.Eye = CameraPosition - mul( Pos, WorldMatrix );
+    // 頂点法線
+    Out.Normal = normalize( mul( Normal, (float3x3)WorldMatrix ) );
+	// ライト視点によるワールドビュー射影変換
+    Out.ZCalcTex = mul( Pos, LightWorldViewProjMatrix );
+    
+    // ディフューズ色＋アンビエント色 計算
+    Out.Color.rgb = AmbientColor;
+    Out.Color.rgb += lerp(0, max(0,dot( Out.Normal, -LightDirection )) * DiffuseColor.rgb, use_toon);
+    Out.Color.a = DiffuseColor.a;
+    Out.Color = saturate( Out.Color );
+    
+    // テクスチャ座標
+    Out.Tex = Tex;
+    
+    float2 NormalWV = mul( Out.Normal, (float3x3)ViewMatrix );
+    Out.SpTex.x = use_subtexture ? Tex2.x : NormalWV.x * 0.5f + 0.5f;
+    Out.SpTex.y = use_subtexture ? Tex2.y : NormalWV.y * -0.5f + 0.5f;
+    
+    //スクリーン座標取得
+    Out.ScreenTex = Out.Pos;
+    
+    //超遠景におけるちらつき防止
+    Out.Pos.z -= max(0, (int)((CameraDistance1 - 6000) * 0.04));
+    
+    return Out;
+}
+
+float4 BufferShadow_PS(BufferShadow_OUTPUT IN) : COLOR
+{
+    // ノーマルマップ適用
+#if NORMAL_FROM == 1
+    float3x3 tangentFrame = compute_tangent_frame(IN.Normal, IN.Eye, IN.Tex);
+    float3 normal = use_spheremap ? normalize(mul(GetNormal(NormalTexSampler, IN.Tex), tangentFrame)) : normalize(IN.Normal);
+#elif NORMAL_FROM == 2
+    float3x3 tangentFrame = compute_tangent_frame(IN.Normal, IN.Eye, IN.Tex);
+    float3 normal = normalize(mul(GetNormal(NormalTexSampler, IN.Tex), tangentFrame));
+    // スフィアのテクスチャ座標の上書き
+    float2 NormalWV = mul( normal, (float3x3)ViewMatrix );
+    IN.SpTex.x = lerp(NormalWV.x * 0.5f + 0.5f, IN.SpTex.x, use_subtexture);
+    IN.SpTex.y = lerp(NormalWV.y * -0.5f + 0.5f, IN.SpTex.y, use_subtexture);
+#else
+    float3 normal = normalize(IN.Normal);
+#endif
+    
+    float4 Color = IN.Color;
+    float4 ShadowColor = float4(saturate(AmbientColor), Color.a);
+    
+    // テクスチャ適用
+    float4 TexColor = tex2D( ObjTexSampler, IN.Tex );
+    TexColor.rgb = lerp(1, TexColor * TextureMulValue + TextureAddValue, TextureMulValue.a + TextureAddValue.a);
+    Color *= use_texture ? TexColor : 1;
+    ShadowColor *= use_texture ? TexColor : 1;
+    
+#if NORMAL_FROM != 1
+    // スフィアマップ適用
+    TexColor = tex2D(ObjSphareSampler,IN.SpTex);
+    TexColor.rgb = lerp(spadd?0:1, TexColor * SphereMulValue + SphereAddValue, SphereMulValue.a + SphereAddValue.a);
+    
+    Color.rgb = use_spheremap ? (spadd ? Color.rgb + TexColor.rgb : Color.rgb * TexColor.rgb) : Color.rgb;
+    ShadowColor.rgb = use_spheremap ? (spadd ? ShadowColor.rgb + TexColor.rgb : ShadowColor.rgb * TexColor.rgb) : ShadowColor.rgb;
+    Color.a *= use_spheremap ? TexColor.a : 1;
+    ShadowColor.a *= use_spheremap ? TexColor.a : 1;
+#endif
+    
+    // スペキュラ適用
+    Color.rgb += pow( max(0,dot( normalize( normalize(IN.Eye) + -LightDirection ), normal )), SpecularPower ) * SpecularColor;
+    
+    // テクスチャ座標に変換
+    IN.ZCalcTex /= IN.ZCalcTex.w;
+    float2 TransTexCoord;
+    TransTexCoord.x = (1.0f + IN.ZCalcTex.x)*0.5f;
+    TransTexCoord.y = (1.0f - IN.ZCalcTex.y)*0.5f;
+    
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // ■ ExcellentShadowシステム　ここから↓
+    
+    if(Exist_ExcellentShadow){
+        
+        IN.ScreenTex.xyz /= IN.ScreenTex.w;
+        float2 TransScreenTex;
+        TransScreenTex.x = (1.0f + IN.ScreenTex.x) * 0.5f;
+        TransScreenTex.y = (1.0f - IN.ScreenTex.y) * 0.5f;
+        TransScreenTex += ES_ViewportOffset;
+        float SadowMapVal = tex2D(ScreenShadowMapProcessedSamp, TransScreenTex).r;
+        
+        float SSAOMapVal = 0;
+        
+        if(Exist_ExShadowSSAO){
+            SSAOMapVal = tex2D(ExShadowSSAOMapSamp , TransScreenTex).r; //陰度取得
+        }
+        
+        // トゥーン適用
+        SadowMapVal = lerp(SadowMapVal, min(saturate(dot(normal, -LightDirection) * 3), SadowMapVal), use_toon);
+        ShadowColor.rgb *= lerp(1, MaterialToon, use_toon);
+        ShadowColor.rgb *= (1 - (1 - ShadowRate) * lerp(X_SHADOWPOWER, PMD_SHADOWPOWER, use_toon));
+        
+        //影部分のSSAO合成
+        float4 ShadowColor2 = ShadowColor;
+        ShadowColor2.rgb -= ((Color.rgb - ShadowColor2.rgb) + 0.3) * SSAOMapVal * 0.2;
+        ShadowColor2.rgb = max(ShadowColor2.rgb, 0);
+        
+        //日向部分のSSAO合成
+        Color = lerp(Color, ShadowColor, saturate(SSAOMapVal * 0.4));
+        
+        // パラメータ適用
+        Color.rgb *= LightMul;
+        ShadowColor2.rgb *= ShadowP;
+        ShadowColor2.rgb = lerp(ShadowColor2.rgb + ShadowAdd, Color.rgb, ShadowM);
+        
+#if TOON_ENABLE == 1
+        SadowMapVal *= saturate(dot(normalize(normal),-LightDirection));
+	SadowMapVal = tex2D( ThresholdTextureSampler, float2(SadowMapVal-ToonThreshold, 0)).r;
+#endif
+        
+        //最終合成
+        Color = lerp(ShadowColor2, Color, SadowMapVal);
+        
+#if FOG_ENABLE == 1
+        // フォグ適用
+        IN.PosW.xyz/=IN.PosW.w;
+        IN.PosW.w = distance(IN.PosW.xyz,CameraPosition);
+        float4 pos = IN.PosW;
+        float f1 = 1.0-pow(1.0-pow(saturate((pos.w-fog1.x)/(fog1.y-fog1.x)), FogParam.x), FogParam.y);
+        float f2 = pow(1.0-pow(saturate((pos.y-fog2.x)/(fog2.y-fog2.x)), FogParam.x), FogParam.y);
+        Color.rgb = lerp(Color.rgb, FogColor, f1*f2*(1.0f-FogPower));
+#endif
+        
+        // 発光抑え
+        Color.rgb = lerp(Color.rgb, saturate(Color.rgb), Saturate);
+        
+        // 発光色適用
+#if EMISSIVE_FROM == 1
+        Color.rgb += use_texture ? tex2D(ObjTexSampler, IN.Tex).rgb * EmissiveInt : 0;
+#elif EMISSIVE_FROM == 2
+        Color.rgb += tex2D(EmissiveTexSampler, IN.Tex).rgb * EmissiveInt;
+#endif
+        
+        return Color;
+        
+    }else
+    
+    /////////////////////////////////////////////////////////////////////////////////////////
+    
+    if( any( saturate(TransTexCoord) != TransTexCoord ) ) {
+        // シャドウバッファ外
+        
+        // パラメータ適用
+        Color.rgb *= LightMul;
+        
+#if FOG_ENABLE == 1
+        // フォグ適用
+        IN.PosW.xyz/=IN.PosW.w;
+        IN.PosW.w = distance(IN.PosW.xyz,CameraPosition);
+        float4 pos = IN.PosW;
+        float f1 = 1.0-pow(1.0-pow(saturate((pos.w-fog1.x)/(fog1.y-fog1.x)), FogParam.x), FogParam.y);
+        float f2 = pow(1.0-pow(saturate((pos.y-fog2.x)/(fog2.y-fog2.x)), FogParam.x), FogParam.y);
+        Color.rgb = lerp(Color.rgb, FogColor, f1*f2*(1.0f-FogPower));
+#endif
+        
+        // 発光抑え
+        Color.rgb = lerp(Color.rgb, saturate(Color.rgb), Saturate);
+        
+        // 発光色適用
+#if EMISSIVE_FROM == 1
+        Color.rgb += use_texture ? tex2D(ObjTexSampler, IN.Tex).rgb * EmissiveInt : 0;
+#elif EMISSIVE_FROM == 2
+        Color.rgb += tex2D(EmissiveTexSampler, IN.Tex).rgb * EmissiveInt;
+#endif
+        
+        return Color;
+    } else {
+        // セルフシャドウ
+        float comp=1-saturate(max(IN.ZCalcTex.z-tex2D(DefSampler,TransTexCoord).r, 0.0f)*(parthf ? SKII2*TransTexCoord.y : SKII1)-0.3f);
+        
+#if TOON_ENABLE == 1
+        comp *= saturate(dot(normal,-LightDirection));
+        comp = tex2D( ThresholdTextureSampler, float2(comp-ToonThreshold, 0)).r;
+#else
+        comp = use_toon ? min(saturate(dot(normal,-LightDirection)*Toon),comp) : comp;
+#endif
+        ShadowColor.rgb *= use_toon ? MaterialToon : 1;
+        
+        // パラメータ適用
+        Color.rgb *= LightMul;
+        ShadowColor.rgb *= ShadowP;
+        ShadowColor.rgb = lerp(ShadowColor.rgb + ShadowAdd, Color.rgb, ShadowM);
+        
+        float4 ans = lerp(ShadowColor, Color, comp);
+        ans.a = transp ? 0.5f : ans.a;
+        
+#if FOG_ENABLE == 1
+        // フォグ適用
+        IN.PosW.xyz/=IN.PosW.w;
+        IN.PosW.w = distance(IN.PosW.xyz,CameraPosition);
+        float4 pos = IN.PosW;
+        float f1 = 1.0-pow(1.0-pow(saturate((pos.w-fog1.x)/(fog1.y-fog1.x)), FogParam.x), FogParam.y);
+        float f2 = pow(1.0-pow(saturate((pos.y-fog2.x)/(fog2.y-fog2.x)), FogParam.x), FogParam.y);
+        ans.rgb = lerp(ans.rgb, FogColor, f1*f2*(1.0f-FogPower));
+#endif
+        
+        // 発光抑え
+        ans.rgb = lerp(ans.rgb, saturate(ans.rgb), Saturate);
+        
+        // 発光色適用
+#if EMISSIVE_FROM == 1
+        ans.rgb += use_texture ? tex2D(ObjTexSampler, IN.Tex).rgb * EmissiveInt : 0;
+#elif EMISSIVE_FROM == 2
+        ans.rgb += tex2D(EmissiveTexSampler, IN.Tex).rgb * EmissiveInt;
+#endif
+        
+        return ans;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// テクニック
+
+technique MainTec < string MMDPass = "object"; > {
+    pass DrawObject {
+        VertexShader = compile vs_3_0 Basic_VS();
+        PixelShader  = compile ps_3_0 Basic_PS();
+    }
+}
+
+technique MainTecBS  < string MMDPass = "object_ss"; > {
+    pass DrawObject {
+#if SHADOW_ENABLE == 0
+        VertexShader = compile vs_3_0 Basic_VS();
+        PixelShader  = compile ps_3_0 Basic_PS();
+#else
+        VertexShader = compile vs_3_0 BufferShadow_VS();
+        PixelShader  = compile ps_3_0 BufferShadow_PS();
+#endif
+    }
+}
+
+#if FOG_ENABLE == 1
+technique EdgeTec < string MMDPass = "edge"; > {
+    pass DrawEdge {
+        VertexShader = compile vs_2_0 Edge_VS();
+        PixelShader  = compile ps_2_0 Edge_PS();
+    }
+}
+#endif
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////

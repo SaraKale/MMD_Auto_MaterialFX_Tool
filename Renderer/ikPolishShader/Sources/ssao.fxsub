@@ -1,0 +1,349 @@
+//-----------------------------------------------------------------------------
+// SSAO
+
+#if SSAORayCount > 0
+
+// 色の反射も計算する?
+#if SSAO_QUALITY >= 2
+#define FILTER_MODE			MinFilter = POINT; MagFilter = POINT; MipFilter = NONE;
+//#define FILTER_MODE	MinFilter = LINEAR; MagFilter = LINEAR; MipFilter = NONE;
+#define ADDRESSING_MODE		AddressU = BORDER; AddressV = BORDER; BorderColor = float4(0,0,0,0);
+
+texture SSAOMapRT : OFFSCREENRENDERTARGET <
+	string Description = "SSAO Depth for ikPolishShader";
+	float2 ViewPortRatio = {0.5, 0.5};
+	#if SSAO_QUALITY >= 3
+	string Format = "R32F";		// 深度情報
+	#else
+	string Format = "R16F";		// 深度情報
+	#endif
+	float4 ClearColor = { 0, 0, 0, 0 };
+	float ClearDepth = 1.0;
+	int MipLevels = 1;
+	string DefaultEffect = 
+		HIDE_EFFECT
+		"rgbm_*.x = ./SSAO/SSAO_mask.fx;"	// スカイドーム
+		"*.pmd = ./SSAO/SSAOObject.fx;"
+		"*.pmx = ./SSAO/SSAOObject.fx;"
+		"*.x = ./SSAO/SSAOObject.fx;"
+		"* = hide;" ;
+>;
+
+sampler GIDepthSamp = sampler_state {
+	texture = <SSAOMapRT>;
+	FILTER_MODE
+	ADDRESSING_MODE
+};
+
+float4 GetWPosForSSAO2(float2 Tex)
+{
+	float Depth = tex2Dlod( GIDepthSamp, float4(Tex,0,0)).x;
+	float2 uv = Tex.xy * (1.0 / GIFrameScale) + (0.5 - 0.5 * (1.0 / GIFrameScale));
+	return float4(ReconstructWPos(uv, Depth), Depth > 0);
+}
+
+float GetSSAODepth(float2 Tex)
+{
+	return tex2Dlod( GIDepthSamp, float4(Tex,0,0)).x;
+}
+#else
+
+float GetSSAODepth(float2 Tex)
+{
+	NormalDepth ND = GetNormalDepthRawLod(Tex);
+	return ND.depth;
+}
+
+#endif
+
+float4 GetWPosForSSAO(float2 Tex)
+{
+	GeometryInfo geom = GetWNDLod(Tex);
+	return float4(geom.wpos, geom.nd.depth > 0);
+}
+
+
+float4 GetSSAOSampleScale()
+{
+	float4 SmpStep = 0;
+	SmpStep.xy = CalcKernelSize( DepthLength * 0.25 );
+	SmpStep.zw = SampStep;
+	return SmpStep;
+}
+
+float4 GetSSAOSampleScale2()
+{
+	return GetSSAOSampleScale() * float4(GIFrameScale, GIFrameScale, 2, 2);
+}
+
+
+//-----------------------------------------------------------------------------
+// 
+
+struct VS_SSAO_OUTPUT {
+	float4 Pos		: POSITION;		// 射影変換座標
+	float4 Tex		: TEXCOORD0;	// テクスチャ
+
+	float4	SmpStep		: TEXCOORD1;
+	float4	AOFactor	: TEXCOORD2;
+};
+
+VS_SSAO_OUTPUT SetVS_SSAO_OUTPUT(float4 Pos, float2 Tex, float Scale)
+{
+	VS_SSAO_OUTPUT Out = (VS_SSAO_OUTPUT)0; 
+
+	Out.Pos = Pos;
+
+	float2 size = floor(ViewportSize * Scale);
+	Out.Tex.xy = Tex.xy + 0.5 / size;
+	Out.Tex.zw = CalcJitterCoord(Tex.xy);
+
+	float bias = mSSAOBias * 0.4 + 0.17;
+	Out.AOFactor.x = bias;
+	Out.AOFactor.y = 1.0 / (1.0 - bias);
+	// Out.AOFactor.y = 1.0 / pow(DepthLength, 6); // InvDepthLength^6
+	Out.AOFactor.w = AmbientPower;
+
+	return Out;
+}
+
+VS_SSAO_OUTPUT VS_SSAO( float4 Pos : POSITION, float2 Tex : TEXCOORD0 )
+{
+	VS_SSAO_OUTPUT Out = SetVS_SSAO_OUTPUT(Pos, Tex, 1.0);
+	Out.SmpStep = GetSSAOSampleScale();
+	return Out;
+}
+
+float ComputeSSAO(float2 uv, float3 WPos, float3 N, float2 bias)
+{
+	float4 wpos1 = GetWPosForSSAO(uv);
+	float3 v = wpos1.xyz - WPos;
+	float vv = dot(v, v);
+//	float falloff = exp2(-vv / (DepthLength * DepthLength));
+	float falloff = exp2(-vv / DepthLength);
+	falloff *= (wpos1.w > 0);
+	float dotNV = dot(N,v) / sqrt(vv);
+
+	return saturate((dotNV - bias.x) * bias.y) * falloff;
+}
+
+float4 PS_SSAO( VS_SSAO_OUTPUT IN ) : COLOR
+{
+	float2 texCoord = IN.Tex.xy;
+
+	GeometryInfo geom = GetWND(texCoord);
+	float3 N = geom.nd.normal;
+
+	float angleMul = GOLDEN_ANGLE;
+	float angleAdd = GetAngleJitterOffset(IN.Tex.zw);
+
+	float2 radiusMul = min(0.1, IN.SmpStep.xy / max( geom.nd.depth, 1)) / SSAORayCount;
+	float2 radiusAdd = IN.SmpStep.zw;
+
+	float3 WPos = geom.wpos.xyz;
+	float4 uv = float4(texCoord, texCoord);
+	float2 bias = IN.AOFactor.xy;
+
+	float2 sc;
+	sincos(angleAdd * 0.5, sc.x, sc.y);
+	float4 deltaUV = float4(sc.xyxy * radiusMul.xyxy) * float4(1,1,-1,-1);
+	uv += sc.xyxy * float4(radiusAdd, -radiusAdd);
+
+	float ao = 0;
+	float ao2 = 0;
+	for(float s = 0; s < SSAORayCount / 2; ++s)
+	{
+		uv += deltaUV;
+		ao = max(ao, ComputeSSAO(uv.xy, WPos, N, bias));
+		ao2 = max(ao2, ComputeSSAO(uv.zw, WPos, N, bias));
+	}
+
+	ao = saturate(1.0 - (ao + ao2) * 0.5 * IN.AOFactor.w);
+
+	// return float4(asin(ao) * 2.0 / PI, 0, 0, 1);
+	return float4(ao, 0, 0, 1);
+}
+
+
+
+#if SSAO_QUALITY >= 2
+VS_SSAO_OUTPUT VS_SSAO2( float4 Pos : POSITION, float2 Tex : TEXCOORD0 )
+{
+	VS_SSAO_OUTPUT Out = SetVS_SSAO_OUTPUT(Pos, Tex, 0.5);
+	Out.SmpStep = GetSSAOSampleScale2();
+	return Out;
+}
+
+float ComputeSSAO2(float2 uv, float3 WPos, float3 N, float2 bias)
+{
+	float4 wpos1 = GetWPosForSSAO2(uv);
+	float3 v = wpos1.xyz - WPos;
+	float vv = dot(v, v);
+//	float falloff = exp2(-vv / (DepthLength * DepthLength));
+	float falloff = exp2(-vv / DepthLength);
+	falloff *= (wpos1.w > 0);
+	float dotNV = dot(N,v) / sqrt(vv);
+
+	return saturate((dotNV - bias.x) * bias.y) * falloff;
+}
+
+float4 PS_SSAO2( VS_SSAO_OUTPUT IN ) : COLOR
+{
+	float2 texCoord = IN.Tex.xy;
+
+	GeometryInfo geom = GetWND(texCoord);
+	float3 N = geom.nd.normal;
+
+	float angleMul = GOLDEN_ANGLE;
+	float angleAdd = GetAngleJitterOffset(IN.Tex.zw);
+	float2 radiusMul = min(0.1, IN.SmpStep.xy / max( geom.nd.depth, 1)) / SSAORayCount;
+	float2 radiusAdd = IN.SmpStep.zw;
+
+	float3 WPos = geom.wpos.xyz;
+
+	texCoord = texCoord * GIFrameScale + (-0.5 * GIFrameScale + 0.5);
+	float4 uv = float4(texCoord, texCoord);
+	float2 bias = IN.AOFactor.xy;
+
+	float2 sc;
+	sincos(angleAdd * 0.5, sc.x, sc.y);
+	float4 deltaUV = float4(sc.xyxy * radiusMul.xyxy * 2.0) * float4(1,1,-1,-1);
+	uv += sc.xyxy * float4(radiusAdd, -radiusAdd);
+
+	float ao = 0;
+	float ao2 = 0;
+	for(float s = 0; s < SSAORayCount / 2; ++s)
+	{
+		uv += deltaUV;
+		ao = max(ao, ComputeSSAO2(uv.xy, WPos, N, bias));
+		ao2 = max(ao2, ComputeSSAO2(uv.zw, WPos, N, bias));
+	}
+
+	ao = saturate(1.0 - (ao + ao2) * 0.5 * IN.AOFactor.w);
+
+	// 通常サイズの処理と合成する
+	texCoord = IN.Tex.xy - ViewportOffset + WorkOffset;
+	float falloff = CalcEdgeFalloff(texCoord);
+	float ao0 = tex2D(HalfWorkSamp2, texCoord).x;
+	ao = min(ao, lerp(1, ao0, falloff));
+
+	return float4(ao, 0, 0, 1);
+}
+#endif
+
+
+// 深度を考慮したブラー
+VS_OUTPUT VS_BlurSSAO( float4 Pos : POSITION, float2 Tex : TEXCOORD0, uniform bool bBlurX)
+{
+	VS_OUTPUT Out = (VS_OUTPUT)0; 
+	Out.Pos = Pos;
+	Out.Tex.xy = Tex.xy + WorkOffset;
+	Out.Tex.zw = (bBlurX) ? float2(WorkSampStep.x, 0) : float2(0, WorkSampStep.y);
+
+	return Out;
+}
+
+float4 PS_BlurSSAO( float4 Tex: TEXCOORD0, uniform sampler smp) : COLOR
+{
+	float2 texCoord = Tex.xy;
+	float2 offset = Tex.zw;
+
+	float color0 = tex2D( smp, texCoord ).x;
+	NormalDepth nd0 = GetNormalDepthRaw(texCoord);
+	float depthMargin = CalcDepthMargin(nd0);
+
+	float2 sum = float2(color0, 1) * BlurWeight[0];
+
+	[unroll] for(int i = 1; i < 8; i++)
+	{
+		float4 uv = offset.xyxy * float4(i,i, -i,-i) + texCoord.xyxy;
+		NormalDepth ndp = GetNormalDepthRaw(uv.xy);
+		NormalDepth ndn = GetNormalDepthRaw(uv.zw);
+		float cp = tex2D(smp, uv.xy).x;
+		float cn = tex2D(smp, uv.zw).x;
+		float wp = (abs(nd0.depth - ndp.depth) < depthMargin);
+		float wn = (abs(nd0.depth - ndn.depth) < depthMargin);
+		wp *= BlurWeight[i] * CalcNormalWeight(nd0.normal, ndp.normal);
+		wn *= BlurWeight[i] * CalcNormalWeight(nd0.normal, ndn.normal);
+		sum += float2(cp, 1) * wp;
+		sum += float2(cn, 1) * wn;
+	}
+
+	return float4(sum.x / sum.y, 0,0,1);
+}
+
+
+float4 PS_Upscale( float4 Tex: TEXCOORD0, uniform sampler smp) : COLOR
+{
+	float2 texCoord = Tex.xy;
+
+#if WORKSPACE_RES > 1
+
+	NormalDepth nd0 = GetNormalDepthRaw(texCoord);
+	float depthMargin = CalcDepthMargin(nd0);
+
+	float2 result = 0;
+
+	NormalDepth nd1;
+	float col1;
+	float2 uv1;
+	float w;
+
+	texCoord = floor(texCoord * WorkSize) / WorkSize + ViewportOffset;
+	float2 scale = WorkSampStep;
+
+	#define INTEGRATE_RESULT(u,v, w0)	\
+		uv1 = texCoord + float2(u,v) * scale; \
+		nd1 = GetNormalDepthRaw(uv1); \
+		w = (abs(nd0.depth - nd1.depth) < depthMargin) * saturate(dot(nd0.normal, nd1.normal)) * w0; \
+		col1 = tex2D(smp, uv1).x; \
+		result += float2(col1, 1) * w;
+
+	INTEGRATE_RESULT( 1, 1, W2);
+	INTEGRATE_RESULT( 0, 1, W1);
+	INTEGRATE_RESULT(-1, 1, W2);
+
+	INTEGRATE_RESULT( 1, 0, W1);
+	INTEGRATE_RESULT(-1, 0, W1);
+
+	INTEGRATE_RESULT( 1,-1, W2);
+	INTEGRATE_RESULT( 0,-1, W1);
+	INTEGRATE_RESULT(-1,-1, W2);
+
+	INTEGRATE_RESULT( 0, 0, W0);
+	result += float2(col1, 1) * (result.y < 1e-4); // 0除算対策
+	result.x /= result.y;
+
+#else
+	// アップスケール不要
+	// ssaoの最後に 焼きこみAOと合成すれば、このパスは不要になる。
+
+	float result = tex2D(smp, texCoord).x;
+
+#endif
+	result.x *= result.x;
+
+	// AO Map
+	result.x = min(result.x, GetAmbient(texCoord));
+
+	return float4(result.x, 0,0,1);
+}
+
+float GetSSAO(float2 tex) { return tex2D(SSAOWorkSamp, tex).x;}
+
+#else
+
+float GetSSAO(float2 tex) { return 1;}
+
+#endif
+
+
+float3 GTAOMultiBounce(float visibility, float3 albedo)
+{
+	float3 a =  2.0404 * albedo.rgb - 0.3324;
+	float3 b = -4.7951 * albedo.rgb + 0.6417;
+	float3 c =  2.7552 * albedo.rgb + 0.6903;
+
+	float x = visibility;
+	return max(x, ((x*a+b) * x + c) * x);
+}
