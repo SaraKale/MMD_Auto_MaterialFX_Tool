@@ -40,7 +40,7 @@ language：<a href="README_en.md">English</a> | <a href="README_tw.md">繁體中
 ### 4、多语言界面支持
  - 工具界面支持多语言切换，方便不同语言用户使用，提升用户体验。
 
-仅适用于 **.pmx** 文件，如果是 .pmd 文件请自行保存新的 pmx 文件再处理。
+仅适用于 **.pmx** 文件，如果是 .pmd 文件请自行保存新的 pmx 文件再处理。  
 图标是我随便画的，最后感谢 ChatGPT 和 Github Copilot 帮助我完成了代码编写。
 
 ## 下载
@@ -58,15 +58,15 @@ language：<a href="README_en.md">English</a> | <a href="README_tw.md">繁體中
 
 操作系统要求：Windows 7 SP1 以及 更高系统版本
 
-需要有 Microsoft .NET Framework 4.8 运行环境
+需要有 Microsoft .NET Framework 4.8 运行环境  
 下载：https://dotnet.microsoft.com/zh-cn/download/dotnet-framework/net48
 
 ## 注意
 
-程序文件夹内的 `Renderer` 文件夹和 `CustomRules.ini` 文件请不要移动或删除，它是非常重要的，用于导出 .fx 文件。
+程序文件夹内的 `Renderer` 文件夹和 `CustomRules.ini` 文件请不要移动或删除，它是非常重要的，用于导出 .fx 文件。  
 由于我是使用了AI辅助编写代码，难免有问题，如果有修改代码的意愿欢迎提交，谢谢！
 
-目前问题：
+目前问题：  
 **ikPolishShader**加载 .emd 文件可能存在乱码无法读取的问题，暂时不清楚调用的是哪些fxsub文件，建议手动上材质。
 
 ## 编译构建
@@ -149,36 +149,36 @@ dotnet build PMX Material Tools.csproj --framework net48
 
 ## 问题解答 FAQ
 
-Q：无法边加载特效文件：xxxx.fx  Error:failed to open file:kch mc xxxx.tga (parameter:AlbedoSubMap)
+Q：无法边加载特效文件：xxxx.fx  Error:failed to open file:kch mc xxxx.tga (parameter:AlbedoSubMap)  
 A：这是因为高光贴图文件名和法线贴图文件名名称不对，程序只判断了高光贴图 _s/_Specular 和法线贴图 _n/_Normal的名称，无法做到全部通用，请自行检查修改 .fx 的文件路径。
 
-Q：导入Error:failed to open file:xxxx.png (parameter:NormalMap)
+Q：导入Error:failed to open file:xxxx.png (parameter:NormalMap)  
 A：这是因为没有找到相关的图片，请将 .fx 文件导出或复制到贴图文件夹里面。
 
-Q：FX文件没有生成导出。
+Q：FX文件没有生成导出。  
 A：请重启软件再尝试一次，因为偶尔会有点延迟BUG……
 
-Q：MaterialMap栏贴上材质后变黑
+Q：MaterialMap栏贴上材质后变黑  
 A：可能是模型法线错误，请检查模型的法线，或者调整 .fx 文件法线的数值，也有可能是法线贴图文件名错误，请检查是否有对应的法线贴图文件。
 
-Q：导出程序未响应
+Q：导出程序未响应  
 A：这是因为目录内已有.fx文件，如果不需要可删除文件再重新生成，记得提前备份文件。
 
-Q：复制图片文件失败："xxx.png"正由另一进程使用，因此该进程无法访问此文件。
+Q：复制图片文件失败："xxx.png"正由另一进程使用，因此该进程无法访问此文件。  
 A：这是因为当前文件可能在被其他应用占用，请关闭相关占用的程序，然后再复制图片即可。
 
-Q：我可以申请添加 xx 翻译语言吗？
+Q：我可以申请添加 xx 翻译语言吗？  
 A：当然可以！请给我留言，我会在后续新增。
 
 ## 确认状态
 
 目前确认可以分发材质文件的渲染器如下：
 
-Ray-MMD v1.5.2 	by:Rui
-https://github.com/ray-cast/ray-mmd
-ikPolishShader v_028	by:ikeno
-https://ux.getuploader.com/ikeno/
-PowerShader v3.2		by:角砂糖
+Ray-MMD v1.5.2 	by:Rui  
+https://github.com/ray-cast/ray-mmd  
+ikPolishShader v_028	by:ikeno  
+https://ux.getuploader.com/ikeno/  
+PowerShader v3.2		by:角砂糖  
 https://bowlroll.net/user/443942
 
 如果有需要添加的渲染器可以告知我，我会添加上去，不过还是要查看作者是否允许分发。
@@ -191,17 +191,17 @@ https://bowlroll.net/user/443942
 
 ## 来源
 
-使用库：
-PMX Parser         by:ikorin24
+使用库：  
+PMX Parser         by:ikorin24  
 https://github.com/ikorin24/PMXParser
-Fody       by:Fody
-https://github.com/Fody/Fody
-Costura.Fody     by:geertvanhorrik,simoncropp
-https://github.com/Fody/Costura
+Fody       by:Fody  
+https://github.com/Fody/Fody  
+Costura.Fody     by:geertvanhorrik,simoncropp  
+https://github.com/Fody/Costura  
 
-AI代码辅助：
-ChatGPT
-Github Copilot
+AI代码辅助：  
+ChatGPT  
+Github Copilot  
 
 ## 许可证
 

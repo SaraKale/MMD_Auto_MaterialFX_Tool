@@ -55,7 +55,7 @@ Please choose any of the following nodes to download.
 
 Operating System: Windows 7 SP1 and higher versions
 
-Requires Microsoft .NET Framework 4.8 runtime environment
+Requires Microsoft .NET Framework 4.8 runtime environment  
 Download: https://dotnet.microsoft.com/zh-cn/download/dotnet-framework/net48
 
 ## Notes
@@ -63,7 +63,7 @@ Download: https://dotnet.microsoft.com/zh-cn/download/dotnet-framework/net48
 Do not move or delete the `Renderer` folder and `CustomRules.ini` file in the program folder, as they are crucial for exporting .fx files.
 Since I used AI-assisted coding, there might be issues. If you wish to modify the code, feel free to submit changes. Thank you!
 
-Current Issues:
+Current Issues:  
 **ikPolishShader** may encounter garbled text when loading .emd files, and it's unclear which fxsub files are being called. It is recommended to manually apply materials.
 
 ## Build Instructions
@@ -172,12 +172,12 @@ A: Of course! Please leave me a message, and I will add it in future updates.
 
 Currently confirmed renderers that can distribute material files:
 
-Ray-MMD v1.5.2 by: Rui
-https://github.com/ray-cast/ray-mmd
-ikPolishShader v_028 by: ikeno
-https://ux.getuploader.com/ikeno/
-PowerShader v3.2 by: 角砂糖
-https://bowlroll.net/user/443942
+Ray-MMD v1.5.2 by: Rui  
+https://github.com/ray-cast/ray-mmd  
+ikPolishShader v_028 by: ikeno  
+https://ux.getuploader.com/ikeno/  
+PowerShader v3.2 by: 角砂糖  
+https://bowlroll.net/user/443942  
 
 If you need to add other renderers, please let me know, and I will add them, provided the author allows distribution.
 
@@ -189,17 +189,17 @@ If you need to add other renderers, please let me know, and I will add them, pro
 
 ## Credits
 
-Libraries used:
-PMX Parser by: ikorin24
-https://github.com/ikorin24/PMXParser
-Fody by: Fody
-https://github.com/Fody/Fody
-Costura.Fody by: geertvanhorrik, simoncropp
-https://github.com/Fody/Costura
+Libraries used:  
+PMX Parser by: ikorin24  
+https://github.com/ikorin24/PMXParser  
+Fody by: Fody  
+https://github.com/Fody/Fody  
+Costura.Fody by: geertvanhorrik, simoncropp  
+https://github.com/Fody/Costura  
 
-AI Code Assistance:
-ChatGPT
-GitHub Copilot
+AI Code Assistance:  
+ChatGPT  
+GitHub Copilot  
 
 ## License
 
