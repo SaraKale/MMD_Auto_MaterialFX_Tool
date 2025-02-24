@@ -68,12 +68,12 @@ Current Issues:
 
 ## Build Instructions
 
-My development environment:
-OS: Windows 10
-Environment: [Visual Studio 2022](https://visualstudio.microsoft.com/)
-Framework: .NET Framework 4.8
-Language: C# 12.0
-Required NuGet packages:
+My development environment:  
+OS: Windows 10  
+Environment: [Visual Studio 2022](https://visualstudio.microsoft.com/)  
+Framework: .NET Framework 4.8  
+Language: C# 12.0  
+Required NuGet packages:  
 - [PMX Parser](https://www.nuget.org/packages/PMXParser)
 - [Fody](https://www.nuget.org/packages/Fody)
 - [Costura.Fody](https://www.nuget.org/packages/Costura.Fody)

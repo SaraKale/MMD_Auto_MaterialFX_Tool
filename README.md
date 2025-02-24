@@ -51,8 +51,7 @@ language：<a href="README_en.md">English</a> | <a href="README_tw.md">繁體中
 |:---:|:---:|
 | Github |[releases](https://github.com/SaraKale/MMD_Auto_MaterialFX_Tool/releases) |
 | bowlroll |[链接](https://bowlroll.net/file/332134) |
-| aplaybox | [链接](https://www.aplaybox.com/details/model/bwRV3QHtSab9)
- |
+| aplaybox | [链接](https://www.aplaybox.com/details/model/bwRV3QHtSab9) |
 
 ## 运行环境
 
@@ -71,12 +70,12 @@ language：<a href="README_en.md">English</a> | <a href="README_tw.md">繁體中
 
 ## 编译构建
 
-我的开发环境：
-系统：Windows 10
-环境：[Visual Studio 2022](https://visualstudio.microsoft.com/)
-框架：.NET Framework 4.8
-语言：C# 12.0
-需要安装Nuget包：
+我的开发环境：  
+系统：Windows 10  
+环境：[Visual Studio 2022](https://visualstudio.microsoft.com/)  
+框架：.NET Framework 4.8  
+语言：C# 12.0  
+需要安装Nuget包：  
  - [PMX Parser](https://www.nuget.org/packages/PMXParser)
  - [Fody](https://www.nuget.org/packages/Fody)
 - [Costura.Fody](https://www.nuget.org/packages/Costura.Fody)
