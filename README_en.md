@@ -43,20 +43,20 @@ The icon is something I drew casually. Finally, thanks to ChatGPT and GitHub Cop
 
 ## Video Tutorials
 
-youtube：https://youtu.be/Y06DieqjSjY
+youtube：https://youtu.be/Y06DieqjSjY  
 bilibili：https://www.bilibili.com/video/BV1g19BYNEN3/
 
 ## Download
 
 Please choose any of the following nodes to download.
 
-| Node | Link |
-|:---:|:---:|
-| Github | [releases](https://github.com/SaraKale/MMD_Auto_MaterialFX_Tool/releases) |
-| Gitee | [releases](https://gitee.com/sarakale/MMD_Auto_MaterialFX_Tool/releases) |
-| bowlroll | [link](https://bowlroll.net/file/332134) |
-| aplaybox | [link](https://www.aplaybox.com/details/model/bwRV3QHtSab9) |
-| lanzouu | [链接](https://wwiu.lanzouu.com/b0ra0k71g 密码:2u4e) |
+|   Node   |                                   Link                                    |
+| :------: | :-----------------------------------------------------------------------: |
+|  Github  | [releases](https://github.com/SaraKale/MMD_Auto_MaterialFX_Tool/releases) |
+|  Gitee   | [releases](https://gitee.com/sarakale/MMD_Auto_MaterialFX_Tool/releases)  |
+| bowlroll |                 [link](https://bowlroll.net/file/332134)                  |
+| aplaybox |        [link](https://www.aplaybox.com/details/model/bwRV3QHtSab9)        |
+| lanzouu  |         [link](https://wwiu.lanzouu.com/b0ra0k71g) password:2u4e          |
 
 ## System Requirements
 

@@ -45,20 +45,20 @@ language：<a href="README_en.md">English</a> | <a href="README.md">简体中文
 
 ## 視頻教程
 
-youtube：https://youtu.be/Y06DieqjSjY
+youtube：https://youtu.be/Y06DieqjSjY  
 bilibili：https://www.bilibili.com/video/BV1g19BYNEN3/
 
 ## 下載
 
 請選擇下面任意節點下載。
 
-|節點|鏈接|
-|:---:|:---:|
-| Github |[releases](https://github.com/SaraKale/MMD_Auto_MaterialFX_Tool/releases) |
-| Gitee | [releases](https://gitee.com/sarakale/MMD_Auto_MaterialFX_Tool/releases) |
-| bowlroll |[鏈接](https://bowlroll.net/file/332134) |
-| aplaybox | [鏈接](https://www.aplaybox.com/details/model/bwRV3QHtSab9) |
-| lanzouu | [链接](https://wwiu.lanzouu.com/b0ra0k71g 密码:2u4e) |
+|   節點    |                                    鏈接                                    |
+| :------: | :-----------------------------------------------------------------------: |
+|  Github  | [releases](https://github.com/SaraKale/MMD_Auto_MaterialFX_Tool/releases) |
+|  Gitee   | [releases](https://gitee.com/sarakale/MMD_Auto_MaterialFX_Tool/releases)  |
+| bowlroll |                  [鏈接](https://bowlroll.net/file/332134)                  |
+| aplaybox |        [鏈接](https://www.aplaybox.com/details/model/bwRV3QHtSab9)         |
+| lanzouu  |            [鏈接](https://wwiu.lanzouu.com/b0ra0k71g) 密码:2u4e            |
 
 ## 運行環境
 
