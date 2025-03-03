@@ -665,7 +665,7 @@ namespace PMX_Material_Tools
                         emdWriter.WriteLine();
                         emdWriter.WriteLine("[Effect]");
                         emdWriter.WriteLine("Obj = none"); // Main主栏
-                        emdWriter.WriteLine("Obj.show = true"); // 阴影
+                        //emdWriter.WriteLine("Obj.show = true"); // 开启阴影，ikPolishShader渲载入emd文件会有冲突
 
                         // 如果勾选了“源文件夹”选项，贴图文件路径为相对路径
                         if (directoverwrite_text.Checked)
@@ -865,10 +865,6 @@ namespace PMX_Material_Tools
                     ikPolishShader  作者：ikeno
 
                     关联文件：
-                    main类：
-                    Renderer\ikPolishShader\PolishMain.fx
-
-                    材质类：
                     Renderer\ikPolishShader\Material.fx
                     Renderer\ikPolishShader\Sources
                     ***********************/
@@ -912,13 +908,10 @@ namespace PMX_Material_Tools
                         }
 
                         sourceFolder = @"Renderer\ikPolishShader\Sources";
-                        sourceFolder2 = @"Renderer\ikPolishShader\Materials";
                         destFile2 = Path.Combine(fxFolderPath, "Sources");
-                        destFile3 = Path.Combine(fxFolderPath, "Materials");
                         // 复制文件和文件夹到目标文件夹
                         File.Copy(sourceFile1, destFile1, true);
                         CopyDirectory(sourceFolder, destFile2);
-                        CopyDirectory(sourceFolder2, destFile3);
 
                         // 读取 .fx 文件内容
                         string fxContent = File.ReadAllText(destFile1);

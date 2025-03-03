@@ -1,5 +1,12 @@
 // autoLuminous 用のコード
 
+//-----------------------------------------------------------------------------
+// 設定
+
+// ALのスケール値を参照する場合のアクセサリの名前
+// 参照しない場合は、AL_NAMEごとコメントアウトする
+//#define AL_NAME		"AutoLuminous.x"
+#define AL_NAME		"AL4Polish.x"
 
 #define SPECULAR_BASE 100
 
@@ -10,10 +17,20 @@
 #define AL_Power	1.0
 #endif
 
+//-----------------------------------------------------------------------------
+
+
 #ifndef PI
 #define	PI	(3.14159265359)
 #endif
 
+#if !defined(IGNORE_SPHERE)
+#define	IGNORE_SPHERE	1
+#endif
+
+#if IGNORE_SPHERE > 0
+texture ObjectSphereMap: MATERIALSPHEREMAP;
+#endif
 
 // スフィアマップのテクスチャ
 sampler ObjSphereSamplerAL = sampler_state {
@@ -132,8 +149,8 @@ float4 DecodeALInfo(float4 SystemCode, float4 ColorCode, float4 AppendCode, out 
 	return Color;
 }
 
-
-float4 GetEmissiveColor(float4 Color, float4 Tex)
+// Note: ガンマ補正したままの値を返している
+float4 GetAutoluminousColor(float4 Color, float4 Tex)
 {
 	float4 texcolor;
 
@@ -148,11 +165,8 @@ float4 GetEmissiveColor(float4 Color, float4 Tex)
 		float t1 = frac((ftime/* + Ph * IsALCode*/) / Ts);
 		float4 spcolor4 = tex2Dlod(ObjSphereSamplerAL, float4(t1 * 0.25,0,0,0));
 		float4 spcolor5 = tex2Dlod(ObjSphereSamplerAL2, float4(t1 * 0.25,0,0,0));
-		
 		float2 sel = DecisionSequenceCode(spcolor2);
-		
 		Color.rgb *= lerp(float3(1,1,1), lerp(spcolor5.rgb, spcolor4.rgb, sel.y), sel.x);
-		
 	}
 
 	if(use_texture) {
@@ -172,12 +186,8 @@ float4 GetEmissiveColor(float4 Color, float4 Tex)
 	}
 
 	float emissionPower = lerp(EmissionPower0, EmissionPower1, (float)use_toon) * AL_Scaling;
+	// 黒なら発光度を0にする
+	emissionPower *= (dot(Color.rgb, Color.rgb) > 0.0);
 
-	// 明るさを引き上げる
-	float3 scale = 1.0 / max(Color.rgb, 0.1); // 10倍を限界にする。
-	emissionPower *= min(min(scale.r, scale.g), scale.b);
-
-	Color.rgb *= emissionPower;
-
-	return Color;
+	return float4(Color.rgb, emissionPower);
 }

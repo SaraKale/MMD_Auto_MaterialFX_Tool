@@ -1,7 +1,7 @@
 <h1 align="center">MMD Auto MaterialFX Tool</h1>
 
 <p align="center">
-<font size="6px">MMD一键自动生成材质FX工具</font><br />
+<font size="10px">MMD一键自动生成材质FX工具</font><br />
 <img src="FXicon.png" align="middle" width = "100"/>
 </p>
  
@@ -43,6 +43,11 @@ language：<a href="README_en.md">English</a> | <a href="README_tw.md">繁體中
 仅适用于 **.pmx** 文件，如果是 .pmd 文件请自行保存新的 pmx 文件再处理。  
 图标是我随便画的，最后感谢 ChatGPT 和 Github Copilot 帮助我完成了代码编写。
 
+## 视频教程
+
+youtube：https://youtu.be/Y06DieqjSjY
+bilibili：https://www.bilibili.com/video/BV1g19BYNEN3/
+
 ## 下载
 
 请选择下面任意节点下载。
@@ -50,8 +55,10 @@ language：<a href="README_en.md">English</a> | <a href="README_tw.md">繁體中
 |节点|链接|
 |:---:|:---:|
 | Github |[releases](https://github.com/SaraKale/MMD_Auto_MaterialFX_Tool/releases) |
+| Gitee | [releases](https://gitee.com/sarakale/MMD_Auto_MaterialFX_Tool/releases) |
 | bowlroll |[链接](https://bowlroll.net/file/332134) |
 | aplaybox | [链接](https://www.aplaybox.com/details/model/bwRV3QHtSab9) |
+| lanzouu | [链接](https://wwiu.lanzouu.com/b0ra0k71g 密码:2u4e) |
 
 ## 运行环境
 
@@ -64,9 +71,6 @@ language：<a href="README_en.md">English</a> | <a href="README_tw.md">繁體中
 
 程序文件夹内的 `Renderer` 文件夹和 `CustomRules.ini` 文件请不要移动或删除，它是非常重要的，用于导出 .fx 文件。  
 由于我是使用了AI辅助编写代码，难免有问题，如果有修改代码的意愿欢迎提交，谢谢！
-
-目前问题：  
-**ikPolishShader**加载 .emd 文件可能存在乱码无法读取的问题，暂时不清楚调用的是哪些fxsub文件，建议手动上材质。
 
 ## 编译构建
 
@@ -148,7 +152,7 @@ dotnet build PMX Material Tools.csproj --framework net48
 
 ## 问题解答 FAQ
 
-Q：无法边加载特效文件：xxxx.fx  Error:failed to open file:kch mc xxxx.tga (parameter:AlbedoSubMap)  
+Q：无法边加载特效文件：xxxx.fx  Error:failed to open file: xxxx.tga (parameter:AlbedoSubMap)  
 A：这是因为高光贴图文件名和法线贴图文件名名称不对，程序只判断了高光贴图 _s/_Specular 和法线贴图 _n/_Normal的名称，无法做到全部通用，请自行检查修改 .fx 的文件路径。
 
 Q：导入Error:failed to open file:xxxx.png (parameter:NormalMap)  

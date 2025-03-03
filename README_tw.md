@@ -1,7 +1,7 @@
 <h1 align="center">MMD Auto MaterialFX Tool</h1>
 
 <p align="center">
-<font size="6px">MMD一鍵自動生成材質FX工具</font><br />
+<font size="10px">MMD一鍵自動生成材質FX工具</font><br />
 <img src="FXicon.png" align="middle" width = "100"/>
 </p>
  
@@ -43,6 +43,11 @@ language：<a href="README_en.md">English</a> | <a href="README.md">简体中文
 僅適用於 **.pmx** 文件，如果是 .pmd 文件請自行保存新的 pmx 文件再處理。  
 圖標是我隨便畫的，最後感謝 ChatGPT 和 Github Copilot 幫助我完成了代碼編寫。
 
+## 視頻教程
+
+youtube：https://youtu.be/Y06DieqjSjY
+bilibili：https://www.bilibili.com/video/BV1g19BYNEN3/
+
 ## 下載
 
 請選擇下面任意節點下載。
@@ -50,8 +55,10 @@ language：<a href="README_en.md">English</a> | <a href="README.md">简体中文
 |節點|鏈接|
 |:---:|:---:|
 | Github |[releases](https://github.com/SaraKale/MMD_Auto_MaterialFX_Tool/releases) |
+| Gitee | [releases](https://gitee.com/sarakale/MMD_Auto_MaterialFX_Tool/releases) |
 | bowlroll |[鏈接](https://bowlroll.net/file/332134) |
 | aplaybox | [鏈接](https://www.aplaybox.com/details/model/bwRV3QHtSab9) |
+| lanzouu | [链接](https://wwiu.lanzouu.com/b0ra0k71g 密码:2u4e) |
 
 ## 運行環境
 
@@ -148,7 +155,7 @@ dotnet build PMX Material Tools.csproj --framework net48
 
 ## 問題解答 FAQ
 
-Q：無法邊加載特效文件：xxxx.fx  Error:failed to open file:kch mc xxxx.tga (parameter:AlbedoSubMap)  
+Q：無法邊加載特效文件：xxxx.fx  Error:failed to open file: xxxx.tga (parameter:AlbedoSubMap)  
 A：這是因爲高光貼圖文件名和法線貼圖文件名名稱不對，程序只判斷了高光貼圖 _s/_Specular 和法線貼圖 _n/_Normal的名稱，無法做到全部通用，請自行檢查修改 .fx 的文件路徑。
 
 Q：導入Error:failed to open file:xxxx.png (parameter:NormalMap)  

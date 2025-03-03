@@ -221,4 +221,4 @@ MT_MASK		: スカイドーム用。
 
 
 //-----------------------------------------------------------------------------
-#include "Materials/Sources/Material_body.fxsub"
+#include "Sources/Material_body.fxsub"

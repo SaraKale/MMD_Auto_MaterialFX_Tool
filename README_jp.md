@@ -1,7 +1,7 @@
 <h1 align="center">MMD Auto MaterialFX Tool</h1>
 
 <p align="center">
-<font size="6px">MMDワンクリック自動マテリアルFX生成ツール</font><br />
+<font size="10px">MMDワンクリック自動マテリアルFX生成ツール</font><br />
 <img src="FXicon.png" align="middle" width = "100"/>
 </p>
 
@@ -48,6 +48,11 @@
 **注意**：.pmxファイルのみに対応しています。.pmdファイルの場合は、新しい.pmxファイルとして保存してから処理してください。  
 アイコンは私が適当に描いたものです。最後に、ChatGPTとGitHub Copilotがコード作成を手伝ってくれたことに感謝します。
 
+## ビデオチュートリアル
+
+youtube：https://youtu.be/Y06DieqjSjY
+bilibili：https://www.bilibili.com/video/BV1g19BYNEN3/
+
 ## ダウンロード
 
 以下のいずれかのノードからダウンロードしてください。
@@ -55,8 +60,10 @@
 | ノード | リンク |
 |:---:|:---:|
 | Github | [releases](https://github.com/SaraKale/MMD_Auto_MaterialFX_Tool/releases) |
+| Gitee | [releases](https://gitee.com/sarakale/MMD_Auto_MaterialFX_Tool/releases) |
 | bowlroll | [リンク](https://bowlroll.net/file/332134) |
 | aplaybox | [リンク](https://www.aplaybox.com/details/model/bwRV3QHtSab9) |
+| lanzouu | [链接](https://wwiu.lanzouu.com/b0ra0k71g 密码:2u4e) |
 
 ## 動作環境
 
@@ -145,7 +152,7 @@ dotnet build PMX Material Tools.csproj --framework net48
 
 ## FAQ
 
-Q: エフェクトファイルを読み込めません：xxxx.fx Error: failed to open file: kch mc xxxx.tga (parameter: AlbedoSubMap)  
+Q: エフェクトファイルを読み込めません：xxxx.fx Error: failed to open file:  xxxx.tga (parameter: AlbedoSubMap)  
 A: スペキュラーマップまたは法線マップのファイル名が正しくありません。プログラムはスペキュラーマップ`_s`/`_Specular`と法線マップ`_n`/`_Normal`の名前のみをチェックします。万能ではないため、手動で.fxファイルのパスを確認・修正してください。  
 
 Q: インポートエラー：failed to open file: xxxx.png (parameter: NormalMap)  

@@ -312,7 +312,7 @@ sampler ColorSamp = sampler_state {
 //テクスチャ高輝度識別閾値
 float LightThreshold = 0.9;
 
-#include "autoluminous.fxsub"
+#include "Sources/autoluminous.fxsub"
 #endif
 
 #if IS_LIGHT > 0

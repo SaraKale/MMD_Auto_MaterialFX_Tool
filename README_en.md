@@ -41,6 +41,11 @@ Suitable for: Models with built-in specular and normal maps, or users who have c
 Only applicable to **.pmx** files. If you have a .pmd file, please save it as a new .pmx file before processing.
 The icon is something I drew casually. Finally, thanks to ChatGPT and GitHub Copilot for helping me complete the code.
 
+## Video Tutorials
+
+youtube：https://youtu.be/Y06DieqjSjY
+bilibili：https://www.bilibili.com/video/BV1g19BYNEN3/
+
 ## Download
 
 Please choose any of the following nodes to download.
@@ -48,8 +53,10 @@ Please choose any of the following nodes to download.
 | Node | Link |
 |:---:|:---:|
 | Github | [releases](https://github.com/SaraKale/MMD_Auto_MaterialFX_Tool/releases) |
+| Gitee | [releases](https://gitee.com/sarakale/MMD_Auto_MaterialFX_Tool/releases) |
 | bowlroll | [link](https://bowlroll.net/file/332134) |
 | aplaybox | [link](https://www.aplaybox.com/details/model/bwRV3QHtSab9) |
+| lanzouu | [链接](https://wwiu.lanzouu.com/b0ra0k71g 密码:2u4e) |
 
 ## System Requirements
 
@@ -147,7 +154,7 @@ dotnet build PMX Material Tools.csproj --framework net48
 
 ## FAQ
 
-Q: Unable to load effect file: xxxx.fx Error: failed to open file: kch mc xxxx.tga (parameter: AlbedoSubMap)
+Q: Unable to load effect file: xxxx.fx Error: failed to open file: xxxx.tga (parameter: AlbedoSubMap)
 A: This is because the specular map or normal map file names are incorrect. The program only checks for specular map `_s`/`_Specular` and normal map `_n`/`_Normal` names, which may not be universal. Please manually check and modify the .fx file paths.
 
 Q: Import Error: failed to open file: xxxx.png (parameter: NormalMap)

@@ -211,4 +211,4 @@ MT_MASK		: 天空盒用。
 #define PARALLAX_ITERATION	8	// 检索次数(1〜16)
 
 //-----------------------------------------------------------------------------
-#include "Materials/Sources/Material_body.fxsub"
+#include "Sources/Material_body.fxsub"

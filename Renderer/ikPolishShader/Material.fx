@@ -208,4 +208,4 @@ MT_MASK      : For skydomes.
 #define PARALLAX_ITERATION    8    // Number of searches (1 to 16)
 
 //-----------------------------------------------------------------------------
-#include "Materials/Sources/Material_body.fxsub"
+#include "Sources/Material_body.fxsub"
