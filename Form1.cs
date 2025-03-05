@@ -86,6 +86,16 @@ namespace PMX_Material_Tools
             });
             // Meteriallang_button.SelectedIndex = 0;  // 默认选择"无"
 
+            // 初始化导出选项列表
+            Exportoptions_list.Items.Clear(); // 清空列表，避免重复选项
+            Exportoptions_list.Items.AddRange(new string[] {
+                "无",
+                "按图片文件名输出FX",
+                "按材质名称输出FX",
+                "按ID编号输出FX"
+            });
+            // Exportoptions_list.SelectedIndex = 0;  // 默认选择第一个选项
+
             // 初始化语言映射字典
             languageMap = new Dictionary<string, string> {
                 { "English", "en-US" },
@@ -112,16 +122,6 @@ namespace PMX_Material_Tools
 
             // 绑定事件处理程序
             languagelist.SelectedIndexChanged += languagelist_SelectedIndexChanged;
-
-            // 初始化导出选项列表
-            Exportoptions_list.Items.Clear(); // 清空列表，避免重复选项
-            Exportoptions_list.Items.AddRange(new string[] {
-                "无",
-                "按图片文件名输出FX",
-                "按材质名称输出FX",
-                "按ID编号输出FX"
-            });
-            // Exportoptions_list.SelectedIndex = 0;  // 默认选择第一个选项
 
             // 源文件夹选项，绑定directoverwrite_text复选框的CheckedChanged事件
             directoverwrite_text.CheckedChanged += directoverwrite_text_CheckedChanged;
@@ -721,11 +721,6 @@ namespace PMX_Material_Tools
                     /*****************************
                     Ray-MMD 1.5.2  作者：Rui
                     关联文件：
-                    main类：
-                    Renderer\Ray-MMD\main.fxsub
-                    Renderer\Ray-MMD\main.fx
-
-                    材质类：
                     Renderer\Ray-MMD\material_2.0.fx
                     Renderer\Ray-MMD\material_common_2.0.fxsub
                     ***********************/
@@ -788,8 +783,14 @@ namespace PMX_Material_Tools
                         // 查找符合 CustomRules.ini 规则的文件名
                         string albedoFileName = "";
                         string normalFileName = "";
+                        string smoothnessFileName = "";
+                        string roughnessFileName = "";
+                        string metalnessFileName = "";
                         bool albedoMatched = false;
                         bool normalMatched = false;
+                        bool smoothnessMatched = false;
+                        bool roughnessMatched = false;
+                        bool metalnessMatched = false;
 
                         foreach (var rule in customRules)
                         {
@@ -815,8 +816,41 @@ namespace PMX_Material_Tools
                                 normalMatched = true;
                             }
 
-                            // 如果找到了匹配的 Albedo 和 Normal 贴图，则退出循环
-                            if (albedoMatched && normalMatched)
+                            // 查找符合 Smoothness 规则的文件
+                            var smoothnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Smoothness}.*")
+                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
+                                .ToList();
+
+                            if (smoothnessFiles.Count > 0)
+                            {
+                                smoothnessFileName = Path.GetFileName(smoothnessFiles.First());
+                                smoothnessMatched = true;
+                            }
+
+                            // 查找符合 Roughness 规则的文件
+                            var roughnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Roughness}.*")
+                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
+                                .ToList();
+
+                            if (roughnessFiles.Count > 0)
+                            {
+                                roughnessFileName = Path.GetFileName(roughnessFiles.First());
+                                roughnessMatched = true;
+                            }
+
+                            // 查找符合 Metalness 规则的文件
+                            var metalnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Metalness}.*")
+                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
+                                .ToList();
+
+                            if (metalnessFiles.Count > 0)
+                            {
+                                metalnessFileName = Path.GetFileName(metalnessFiles.First());
+                                metalnessMatched = true;
+                            }
+
+                            // 如果找到了匹配的贴图，则退出循环
+                            if (albedoMatched && normalMatched && smoothnessMatched && roughnessMatched && metalnessMatched)
                             {
                                 break;
                             }
@@ -838,6 +872,19 @@ namespace PMX_Material_Tools
                                 fxContent = Regex.Replace(fxContent, @"#define\s+NORMAL_MAP_FROM\s+\d+", "#define NORMAL_MAP_FROM 1");
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(NORMAL_MAP_FILE)\s+""([^""]*)""", $"#define NORMAL_MAP_FILE \"{normalFileName}\"");
                             }
+                            // 替换光滑度或粗糙度贴图
+                            if (smoothnessMatched || roughnessMatched)
+                            {
+                                    fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FROM\s+\d+", "#define SMOOTHNESS_MAP_FROM 1");
+                                    string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName; // 优先选择光滑度贴图，如果smoothnessFileName为空，就用roughnessFileName
+                                    fxContent = Regex.Replace(fxContent, @"#define\s+(SMOOTHNESS_MAP_FILE)\s+""([^""]*)""",$"#define SMOOTHNESS_MAP_FILE \"{selectedFile}\"");
+                            }
+                            // 替换金属度贴图
+                            if (metalnessMatched)
+                            {
+                                fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FROM\s+\d+", "#define METALNESS_MAP_FROM 1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(METALNESS_MAP_FILE)\s+""([^""]*)""", $"#define METALNESS_MAP_FILE \"{metalnessFileName}\"");
+                            }
                         }
                         // 如果选择自定义路径，那么贴图文件路径为绝对路径
                         else
@@ -855,6 +902,21 @@ namespace PMX_Material_Tools
                                 fxContent = Regex.Replace(fxContent, @"#define\s+NORMAL_MAP_FROM\s+\d+", "#define NORMAL_MAP_FROM 1");
                                 string combinedPath = Path.Combine(textureDirectory, normalFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/Normal.png
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(NORMAL_MAP_FILE)\s+""([^""]*)""", $"#define NORMAL_MAP_FILE \"{combinedPath}\"");
+                            }
+                            // 替换光滑度或粗糙度贴图
+                            if (smoothnessMatched || roughnessMatched)
+                            {
+                                    fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FROM\s+\d+", "#define SMOOTHNESS_MAP_FROM 1");
+                                    string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName; // 优先选择光滑度贴图，如果smoothnessFileName为空，就用roughnessFileName
+                                    string combinedPath = Path.Combine(textureDirectory, selectedFile).Replace('\\', '/'); // 路径转义，如：D:/Project/smoothness.png
+                                    fxContent = Regex.Replace(fxContent, @"#define\s+(SMOOTHNESS_MAP_FILE)\s+""([^""]*)""", $"#define SMOOTHNESS_MAP_FILE \"{combinedPath}\"");
+                            }
+                            // 替换金属度贴图
+                            if (metalnessMatched)
+                            {
+                                fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FROM\s+\d+", "#define METALNESS_MAP_FROM 1");
+                                string combinedPath = Path.Combine(textureDirectory, metalnessFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/metalness.png
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(METALNESS_MAP_FILE)\s+""([^""]*)""", $"#define METALNESS_MAP_FILE \"{combinedPath}\"");
                             }
                         }
 
@@ -927,8 +989,14 @@ namespace PMX_Material_Tools
                         // 查找符合 CustomRules.ini 规则的文件名
                         string albedoFileName = "";
                         string normalFileName = "";
+                        string smoothnessFileName = "";
+                        string roughnessFileName = "";
+                        string metalnessFileName = "";
                         bool albedoMatched = false;
                         bool normalMatched = false;
+                        bool smoothnessMatched = false;
+                        bool roughnessMatched = false;
+                        bool metalnessMatched = false;
 
                         foreach (var rule in customRules)
                         {
@@ -954,8 +1022,41 @@ namespace PMX_Material_Tools
                                 normalMatched = true;
                             }
 
-                            // 如果找到了匹配的 Albedo 和 Normal 贴图，则退出循环
-                            if (albedoMatched && normalMatched)
+                            // 查找符合 Smoothness 规则的文件
+                            var smoothnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Smoothness}.*")
+                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
+                                .ToList();
+
+                            if (smoothnessFiles.Count > 0)
+                            {
+                                smoothnessFileName = Path.GetFileName(smoothnessFiles.First());
+                                smoothnessMatched = true;
+                            }
+
+                            // 查找符合 Roughness 规则的文件
+                            var roughnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Roughness}.*")
+                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
+                                .ToList();
+
+                            if (roughnessFiles.Count > 0)
+                            {
+                                roughnessFileName = Path.GetFileName(roughnessFiles.First());
+                                roughnessMatched = true;
+                            }
+
+                            // 查找符合 Metalness 规则的文件
+                            var metalnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Metalness}.*")
+                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
+                                .ToList();
+
+                            if (metalnessFiles.Count > 0)
+                            {
+                                metalnessFileName = Path.GetFileName(metalnessFiles.First());
+                                metalnessMatched = true;
+                            }
+
+                            // 如果找到了匹配的贴图，则退出循环
+                            if (albedoMatched && normalMatched && smoothnessMatched && roughnessMatched && metalnessMatched)
                             {
                                 break;
                             }
@@ -968,15 +1069,40 @@ namespace PMX_Material_Tools
                             // 替换高光贴图
                             if (albedoMatched)
                             {
-                                fxContent = Regex.Replace(fxContent, @"#define\s+ALBEDO_MAP_ENABLE\s+\d+", "#define ALBEDO_MAP_ENABLE 1");
-                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_1)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_1 \"{albedoFileName}\"");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+ALBEDO_MAP_ENABLE\s+\d+", "#define ALBEDO_MAP_ENABLE  1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_1)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_1   \"{albedoFileName}\"");
                             }
                             // 替换法线贴图
                             if (normalMatched)
                             {
                                 fxContent = Regex.Replace(fxContent, @"#define\s+NORMALMAP_ENABLE\s+\d+", "#define NORMALMAP_ENABLE 1");
-                                fxContent = Regex.Replace(fxContent, @"#define\s+(NORMALMAP_MAIN_FILENAME)\s+""([^""]*)""", $"#define NORMALMAP_MAIN_FILENAME \"{normalFileName}\"");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(NORMALMAP_MAIN_FILENAME)\s+""([^""]*)""", $"#define NORMALMAP_MAIN_FILENAME  \"{normalFileName}\"");
                             }
+                            // 替换金属度贴图
+                            if (metalnessMatched)
+                            {
+                                fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_ENABLE\s+\d+", "#define METALNESS_MAP_ENABLE 1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FILE\s+\d+", "#define METALNESS_MAP_FILE 2");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_2)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_2  \"{metalnessFileName}\"");
+                            }
+                            // 替换光滑度贴图
+                            if (smoothnessMatched)
+                            {
+                                string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName;
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_TYPE\s+\d+", "#define SMOOTHNESS_TYPE 1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_ENABLE\s+\d+", "#define SMOOTHNESS_MAP_ENABLE 1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FILE\s+\d+", "#define SMOOTHNESS_MAP_FILE 3");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_3)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_3  \"{selectedFile}\"");
+                            }
+                            else if (roughnessMatched) //替换粗糙度贴图，只有在没有 smoothness 时才用 roughness
+                            {
+                                string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName;
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_TYPE\s+\d+", "#define SMOOTHNESS_TYPE 2");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_ENABLE\s+\d+", "#define SMOOTHNESS_MAP_ENABLE 1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FILE\s+\d+", "#define SMOOTHNESS_MAP_FILE 3");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_3)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_3  \"{selectedFile}\"");
+                            }
+
                         }
                         // 如果选择自定义路径，那么贴图文件路径为绝对路径
                         else 
@@ -984,23 +1110,49 @@ namespace PMX_Material_Tools
                             // 替换高光贴图
                             if (albedoMatched)
                             {
-                                fxContent = Regex.Replace(fxContent, @"#define\s+ALBEDO_MAP_ENABLE\s+\d+", "#define ALBEDO_MAP_ENABLE 1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+ALBEDO_MAP_ENABLE\s+\d+", "#define ALBEDO_MAP_ENABLE  1");
                                 string combinedPath = Path.Combine(textureDirectory, albedoFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/Albedo.png
-                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_1)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_1 \"{combinedPath}\"");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_1)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_1   \"{combinedPath}\"");
                             }
                             // 替换法线贴图
                             if (normalMatched)
                             {
-                                fxContent = Regex.Replace(fxContent, @"#define\s+NORMALMAP_ENABLE\s+\d+", "#define NORMALMAP_ENABLE 1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+NORMALMAP_ENABLE\s+\d+", "#define NORMALMAP_ENABLE  1");
                                 string combinedPath = Path.Combine(textureDirectory, normalFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/Normal.png
-                                fxContent = Regex.Replace(fxContent, @"#define\s+(NORMALMAP_MAIN_FILENAME)\s+""([^""]*)""", $"#define NORMALMAP_MAIN_FILENAME \"{combinedPath}\"");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(NORMALMAP_MAIN_FILENAME)\s+""([^""]*)""", $"#define NORMALMAP_MAIN_FILENAME  \"{combinedPath}\"");
+                            }
+                            // 替换金属度贴图
+                            if (metalnessMatched)
+                            {
+                                fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_ENABLE\s+\d+", "#define METALNESS_MAP_ENABLE  1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FILE\s+\d+", "#define METALNESS_MAP_FILE  2");
+                                string combinedPath = Path.Combine(textureDirectory, metalnessFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/metalness.png
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_2)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_2  \"{combinedPath}\"");
+                            }
+                            // 替换光滑度贴图
+                            if (smoothnessMatched)
+                            {
+                                string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName;
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_TYPE\s+\d+", "#define SMOOTHNESS_TYPE  1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_ENABLE\s+\d+", "#define SMOOTHNESS_MAP_ENABLE  1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FILE\s+\d+", "#define SMOOTHNESS_MAP_FILE  3");
+                                string combinedPath = Path.Combine(textureDirectory, selectedFile).Replace('\\', '/'); // 路径转义，如：D:/Project/smoothness.png
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_3)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_3  \"{combinedPath}\"");
+                            }
+                            else if (roughnessMatched) //替换粗糙度贴图，只有在没有 smoothness 时才用 roughness
+                            {
+                                string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName;
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_TYPE\s+\d+", "#define SMOOTHNESS_TYPE  2");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_ENABLE\s+\d+", "#define SMOOTHNESS_MAP_ENABLE  1");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FILE\s+\d+", "#define SMOOTHNESS_MAP_FILE  3");
+                                string combinedPath = Path.Combine(textureDirectory, selectedFile).Replace('\\', '/'); // 路径转义，如：D:/Project/roughness.png
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_3)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_3  \"{combinedPath}\"");
                             }
                         }
 
                         // 写入修改后的 .fx 文件
                         File.WriteAllText(destFile1, fxContent, new UTF8Encoding(false)); // 使用不带 BOM 的 UTF-8 编码
                     }
-
                     /*****************************
                     PowerShader  作者：角砂糖
 
@@ -1277,6 +1429,15 @@ namespace PMX_Material_Tools
                             case "Normal":
                                 currentRule.Normal = value;
                                 break;
+                            case "Smoothness":
+                                currentRule.Smoothness = value;
+                                break;
+                            case "Roughness":
+                                currentRule.Roughness = value;
+                                break;
+                            case "Metalness":
+                                currentRule.Metalness = value;
+                                break;
                         }
                     }
                 }
@@ -1289,9 +1450,12 @@ namespace PMX_Material_Tools
         }
         private class CustomRule
         {
-            public string Diffuse { get; set; }
-            public string Specular { get; set; }
-            public string Normal { get; set; }
+            public string Diffuse { get; set; } // 漫反射
+            public string Specular { get; set; } // 高光
+            public string Normal { get; set; } // 法线
+            public string Smoothness { get; set; } // 光滑度
+            public string Roughness { get; set; } // 粗糙度
+            public string Metalness { get; set; } // 金属度
         }
 
         //=======================================

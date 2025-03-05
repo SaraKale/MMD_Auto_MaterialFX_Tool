@@ -51,10 +51,10 @@ MT_MASK		: 天空盒用。
 // 是否为金属。≈反射强度
 // 数值越高，反射越强&受到原来颜色的影响。
 // 0:非金属，1:金属。宝石等为0.1-0.2左右
-// 开启法线高光用，METALNESS_MAP_ENABLE最好不要开启，否则会黑漆漆一片，最好调整上面的METALNESS_VALUE值，一般0.1-0.5左右即可
+// 如果调整过黑最好调整METALNESS_VALUE值，一般0.1-0.5左右即可
 #define	METALNESS_VALUE			0.0
-#define	METALNESS_MAP_ENABLE	0	// 0:VALUE，1:在纹理中指定，启动高光贴图的渲染
-#define METALNESS_MAP_FILE		0	// 指定要使用的纹理文件编号。0-3  也就是高光贴图序号
+#define	METALNESS_MAP_ENABLE	0	// 0:VALUE，1:在纹理中指定，启动金属贴图的渲染
+#define METALNESS_MAP_FILE		0	// 指定要使用的纹理文件编号。0-3  也就是金属贴图序号
 #define METALNESS_MAP_CHANNEL	R	// 要使用的纹理通道。R,G,B,A，分别对应通道里的红/绿/蓝/alpha通道
 #define METALNESS_MAP_LOOPNUM	1.0
 #define METALNESS_MAP_SCALE		1.0	// 控制效果大小
