@@ -104,13 +104,14 @@ dotnet build PMX Material Tools.csproj --framework net48
 - 4、选择渲染器：
    - 这是选择你的主渲染，如果不选择任何选项，默认是无，则直接输出 `MaterialInfo.txt` 材质信息文件。
    - 选择任意选项，将会输出相关的 **.fxsub / .fx**文件，根据纹理文件名自动重命名为相同的名称，如果文件名末尾含有高光贴图 `_s`/`_Specular` 和法线贴图 `_n`/`_Normal` 文件名，将会自动在fx文件添加相关的文件名路径。当然这个名称并不是通用的，具体还是要自己修改，如果出现错误请检查贴图文件名。或者自己去增加 `CustomRules.ini` 的重命名自定义规则。
+   - 需要注意的是：由于MMD的语言限制，无法支持更多的编码语言，只能将贴图文件名修改为英文才可以解决，注意前面路径也不要出现其他非英文字符。
      - 目前有以下渲染：
      - Ray-MMD 
      - ikPolishShader
      - PowerShader
 
 - 5、含注释：
-      如果勾选注释说明，同时选择了“**FX文本语言**”，会输出含有注释说明的文件。
+   - 如果勾选注释说明，同时选择了“**FX文本语言**”，会输出含有注释说明的文件。
 
 - 6、FX文本语言：
    - 这里是可以选择 .fx 文本的编码语言，更方便查看修改代码，需要勾选前面的注释选项。
@@ -158,6 +159,11 @@ A：这是因为高光贴图文件名和法线贴图文件名名称不对，程�
 Q：导入Error:failed to open file:xxxx.png (parameter:NormalMap)  
 A：这是因为没有找到相关的图片，请将 .fx 文件导出或复制到贴图文件夹里面。
 
+Q：加载fx文件出现乱码，如：无法边加载特效文件：xxx.fx  
+Error:failed to open file:鞋先鞋揎筛肄笺锋奸牠s.png(parameter:AlbedoSubMap)  
+Error:failed to open file:鞋先鞋掊筛肄笺肄奸牠n.png(parameter:NormalMap)  
+A：这是因为由于MMD的语言限制，无法支持更多的编码语言，只能将贴图文件名修改为英文才可以解决，注意前面路径也不要出现其他非英文字符。建议导出输出到模型所在的目录，目前对于全中文/日语路径没有较好的解决办法。  
+
 Q：FX文件没有生成导出。  
 A：请重启软件再尝试一次，因为偶尔会有点延迟BUG……
 
@@ -182,7 +188,7 @@ https://github.com/ray-cast/ray-mmd
 ikPolishShader v_028	by:ikeno  
 https://ux.getuploader.com/ikeno/  
 PowerShader v3.2		by:角砂糖  
-https://bowlroll.net/user/443942
+https://bowlroll.net/file/195743  
 
 如果有需要添加的渲染器可以告知我，我会添加上去，不过还是要查看作者是否允许分发。
 
@@ -196,7 +202,7 @@ https://bowlroll.net/user/443942
 
 使用库：  
 PMX Parser         by:ikorin24  
-https://github.com/ikorin24/PMXParser
+https://github.com/ikorin24/PMXParser  
 Fody       by:Fody  
 https://github.com/Fody/Fody  
 Costura.Fody     by:geertvanhorrik,simoncropp  

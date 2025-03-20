@@ -106,6 +106,7 @@ dotnet build PMX Material Tools.csproj --framework net48
 4. Select Renderer:
    - Choose your main renderer. If no option is selected, it defaults to none, and only outputs the `MaterialInfo.txt` file.
    - Selecting any option will output the relevant **.fxsub / .fx** files, automatically renamed based on the texture file names. If the file names end with specular map `_s`/`_Specular` or normal map `_n`/`_Normal`, the tool will automatically add the relevant file paths in the .fx file. However, these names are not universal, so you may need to modify them. If errors occur, please check the texture file names or add custom renaming rules in `CustomRules.ini`.
+   - It should be noted that due to the language limitation of MMD, it cannot support more encoding languages. The only solution is to change the texture file name to English, and be careful not to include other non English characters in the path before.
      - Currently supported renderers:
      - Ray-MMD
      - ikPolishShader
@@ -160,6 +161,11 @@ A: This is because the specular map or normal map file names are incorrect. The 
 Q: Import Error: failed to open file: xxxx.png (parameter: NormalMap)
 A: This is because the related image file was not found. Please export or copy the .fx file to the texture folder.
 
+Q： Loading FX file with garbled characters, such as: unable to load special effects file at the same time: xxx.fx  
+Error:failed to open file:鞋先鞋揎筛肄笺锋奸牠s.png(parameter:AlbedoSubMap)    
+Error:failed to open file:鞋先鞋掊筛肄笺肄奸牠n.png(parameter:NormalMap)    
+A： This is because due to the language limitation of MMD, it cannot support more encoding languages. The only solution is to change the texture file name to English, and be careful not to include other non English characters in the path. It is recommended to export the output to the directory where the model is located. Currently, there is no good solution for the full Chinese/Japanese path.  
+
 Q: FX file was not generated or exported.
 A: Please restart the software and try again, as there might be occasional delay bugs.
 
@@ -184,7 +190,7 @@ https://github.com/ray-cast/ray-mmd
 ikPolishShader v_028 by: ikeno  
 https://ux.getuploader.com/ikeno/  
 PowerShader v3.2 by: 角砂糖  
-https://bowlroll.net/user/443942  
+https://bowlroll.net/file/195743  
 
 If you need to add other renderers, please let me know, and I will add them, provided the author allows distribution.
 

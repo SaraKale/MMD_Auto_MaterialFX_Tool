@@ -283,7 +283,6 @@ namespace PMX_Material_Tools
 
         }
 
-
         //=======================================
         // 导出目标路径处理逻辑
         //=======================================
@@ -357,60 +356,6 @@ namespace PMX_Material_Tools
 
         }
 
-        // 复制文件重试机制，解决文件占用问题
-        //private void CopyFileWithRetry(string sourceFilePath, string destFilePath, int retryCount = 3, int delayMilliseconds = 1000)
-        //{
-        //    ResourceManager rm = new ResourceManager("PMX_Material_Tools.languagelist.Resources", Assembly.GetExecutingAssembly());
-
-        //    for (int i = 0; i < retryCount; i++)
-        //    {
-        //        try
-        //        {
-        //            // 添加调试信息，尝试复制文件
-        //            // 尝试复制文件: {sourceFilePath} 到 {destFilePath} (尝试次数: {i + 1})
-        //            Console.WriteLine(string.Format(rm.GetString("CopyFileAttemptMessage"), sourceFilePath, destFilePath, i + 1));
-        //            using (FileStream sourceStream = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        //            using (FileStream destStream = new FileStream(destFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
-        //            {
-        //                sourceStream.CopyTo(destStream);
-        //            }
-        //            Console.WriteLine(rm.GetString("FileCopySuccessMessage")); // 文件复制成功
-        //            return; // 成功复制文件，退出方法
-        //        }
-        //        catch (FileNotFoundException ex)
-        //        {
-        //            // 文件未找到，添加调试信息
-        //            Console.WriteLine(string.Format(rm.GetString("FileNotFound"), ex.Message));
-        //            throw new FileNotFoundException(string.Format(rm.GetString("FileNotFound"), ex.Message), ex);
-        //        }
-        //        catch (UnauthorizedAccessException ex)
-        //        {
-        //            // 无权限访问文件，添加调试信息
-        //            Console.WriteLine(string.Format(rm.GetString("UnauthorizedAccess"), ex.Message));
-        //            throw new UnauthorizedAccessException(string.Format(rm.GetString("UnauthorizedAccess"), ex.Message), ex);
-        //        }
-        //        catch (IOException ex)
-        //        {
-        //            if (i == retryCount - 1)
-        //            {
-        //                // 重试次数用尽，抛出异常
-        //                string errorMessage = string.Format(rm.GetString("FileCopyError"), ex.Message); // 复制文件失败 提示
-        //                Console.WriteLine(string.Format(rm.GetString("FileCopyError"), errorMessage));
-        //                throw new IOException(errorMessage, ex);
-        //            }
-        //            // 等待一段时间后重试 文件被占用，等待 {delayMilliseconds} 毫秒后重试...
-        //            Console.WriteLine(string.Format(rm.GetString("FileInUseConsoleMessage"), delayMilliseconds));
-        //            System.Threading.Thread.Sleep(delayMilliseconds);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // 其他未知错误，添加调试信息
-        //            Console.WriteLine(string.Format(rm.GetString("UnknownError"), ex.Message));
-        //            throw new Exception(string.Format(rm.GetString("UnknownError"), ex.Message), ex);
-        //        }
-        //    }
-        //}
-
         //=======================================
         // 最终输出按钮
         // 提取材质和纹理信息，生成材质文件和纹理文件，并创建 "_FX" 文件夹
@@ -467,7 +412,8 @@ namespace PMX_Material_Tools
 
                 if (!directoverwrite_text.Checked)
                 {
-                    if (renderer == "Ray-MMD"){
+                    if (renderer == "Ray-MMD")
+                    {
                         string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss"); //自动生成时间戳
                         fxFolderPath = Path.Combine(outputFolderPath, "Ray" + $"_FX_{timestamp}");
                         if (!Directory.Exists(fxFolderPath))
@@ -475,7 +421,7 @@ namespace PMX_Material_Tools
                             Directory.CreateDirectory(fxFolderPath);
                         }
                     }
-                    else if(renderer == "ikPolishShader")
+                    else if (renderer == "ikPolishShader")
                     {
                         string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss"); //自动生成时间戳
                         fxFolderPath = Path.Combine(outputFolderPath, "ik" + $"_FX_{timestamp}");
@@ -484,7 +430,7 @@ namespace PMX_Material_Tools
                             Directory.CreateDirectory(fxFolderPath);
                         }
                     }
-                    else if(renderer == "PowerShader")
+                    else if (renderer == "PowerShader")
                     {
                         string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss"); //自动生成时间戳
                         fxFolderPath = Path.Combine(outputFolderPath, "PS" + $"_FX_{timestamp}");
@@ -605,7 +551,6 @@ namespace PMX_Material_Tools
                 // 导出材质文件
                 //----------------------------------------
                 // 处理渲染器和语言选择
-                // string renderer = render_list.SelectedItem?.ToString() ?? "无"; // 渲染器列表
                 bool includeNote = note_button.Checked;
                 string materialLang = Meteriallang_button.SelectedItem?.ToString() ?? "无"; // FX文本语言
                 string exportOption = Exportoptions_list.SelectedItem?.ToString() ?? rm.GetString("ExportOption_ByImageName"); // 按图片文件名输出FX
@@ -613,45 +558,71 @@ namespace PMX_Material_Tools
                 // --------------------------------------
                 // 处理 Material.emd 文件
                 // --------------------------------------
-                // 根据选择的语言设置编码
-                Encoding encoding = new UTF8Encoding(false); // 使用不带 BOM 的 UTF-8 编码
-                if (exportOption == rm.GetString("ExportOption_ByMaterialName")) // 按材质名称输出FX
+                // 根据系统语言设置编码
+                Encoding encoding = new UTF8Encoding(false); // 默认UTF-8编码（无BOM）
+                var currentCulture = System.Globalization.CultureInfo.CurrentCulture.Name;
+                if (currentCulture.StartsWith("zh-CN"))
                 {
-                    // 遍历每个材质，检测材质名称的语言，应对在 MMD 导入 .emd 文件时乱码的问题
-                    foreach (var material in pmx.MaterialList.Span)
-                    {
-                        if (IsSimplifiedChinese(material.Name))
-                        {
-                            encoding = Encoding.GetEncoding("GB18030"); // GB18030 包含 GBK 和 GB2312 编码
-                            break;
-                        }
-                        else if (IsTraditionalChinese(material.Name))
-                        {
-                            encoding = Encoding.GetEncoding("BIG5"); // BIG5 是繁体中文编码
-                            break;
-                        }
-                        else if (IsJapanese(material.Name))
-                        {
-                            encoding = Encoding.GetEncoding("shift_jis"); // Shift-JIS 是日语编码
-                            break;
-                        }
-                        else if (IsKorean(material.Name))
-                        {
-                            encoding = Encoding.GetEncoding("EUC-KR"); // EUC-KR 是韩语编码
-                            break;
-                        }
-                        else if (IsRussian(material.Name))
-                        {
-                            encoding = Encoding.GetEncoding("KOI8-R"); // KOI8-R 是俄语编码
-                            break;
-                        }
-                        else if (IsLatin(material.Name))
-                        {
-                            encoding = Encoding.GetEncoding("WINDOWS-1250"); // WINDOWS-1250 是拉丁语编码
-                            break;
-                        }
-                    }
+                    encoding = Encoding.GetEncoding("GB18030"); // 简体中文
                 }
+                else if (currentCulture.StartsWith("zh-TW"))
+                {
+                    encoding = Encoding.GetEncoding("BIG5"); // 繁体中文
+                }
+                else if (currentCulture.StartsWith("ja"))
+                {
+                    encoding = Encoding.GetEncoding("shift_jis"); // 日语
+                }
+                else if (currentCulture.StartsWith("ko"))
+                {
+                    encoding = Encoding.GetEncoding("EUC-KR"); // 韩语
+                }
+                else if (currentCulture.StartsWith("ru"))
+                {
+                    encoding = Encoding.GetEncoding("KOI8-R"); // 俄语
+                }
+                else if (currentCulture.StartsWith("en"))
+                {
+                    encoding = Encoding.GetEncoding("WINDOWS-1252"); // 英文拉丁语
+                }
+
+                //if (exportOption == rm.GetString("ExportOption_ByMaterialName")) // 按材质名称输出FX
+                //{
+                //    // 遍历每个材质，检测材质名称的语言，应对在 MMD 导入 .emd 文件时乱码的问题
+                //    foreach (var material in pmx.MaterialList.Span)
+                //    {
+                //        if (IsSimplifiedChinese(material.Name))
+                //        {
+                //            encoding = Encoding.GetEncoding("GB18030"); // GB18030 包含 GBK 和 GB2312 编码
+                //            break;
+                //        }
+                //        else if (IsTraditionalChinese(material.Name))
+                //        {
+                //            encoding = Encoding.GetEncoding("BIG5"); // BIG5 是繁体中文编码
+                //            break;
+                //        }
+                //        else if (IsJapanese(material.Name))
+                //        {
+                //            encoding = Encoding.GetEncoding("shift_jis"); // Shift-JIS 是日语编码
+                //            break;
+                //        }
+                //        else if (IsKorean(material.Name))
+                //        {
+                //            encoding = Encoding.GetEncoding("EUC-KR"); // EUC-KR 是韩语编码
+                //            break;
+                //        }
+                //        else if (IsRussian(material.Name))
+                //        {
+                //            encoding = Encoding.GetEncoding("KOI8-R"); // KOI8-R 是俄语编码
+                //            break;
+                //        }
+                //        else if (IsLatin(material.Name))
+                //        {
+                //            encoding = Encoding.GetEncoding("WINDOWS-1250"); // WINDOWS-1250 是拉丁语编码
+                //            break;
+                //        }
+                //    }
+                //}
 
                 // 检查是否选择了导出选项和渲染器
                 if (Exportoptions_list.SelectedItem != null && render_list.SelectedItem != null)
@@ -665,44 +636,46 @@ namespace PMX_Material_Tools
                         emdWriter.WriteLine();
                         emdWriter.WriteLine("[Effect]");
                         emdWriter.WriteLine("Obj = none"); // Main主栏
-                        //emdWriter.WriteLine("Obj.show = true"); // 开启阴影，ikPolishShader渲载入emd文件会有冲突
 
-                        // 如果勾选了“源文件夹”选项，贴图文件路径为相对路径
-                        if (directoverwrite_text.Checked)
+                        // 遍历材质列表，输出FX路径
+                        for (int i = 0; i < pmx.MaterialList.Length; i++)
                         {
-                            for (int i = 0; i < pmx.MaterialList.Length; i++)
+                            var material = pmx.MaterialList.Span[i];
+                            string materialTextureFile = material.Texture < pmx.TextureList.Length
+                                ? pmx.TextureList.Span[material.Texture]
+                                : rm.GetString("TextureFileMissing"); // 纹理丢失提示
+
+                            // 统一编码输出FX文件名，确保三种模式都按系统语言编码
+                            string fxFileName = exportOption == rm.GetString("ExportOption_ByMaterialName")
+                                ? material.Name + ".fx" // 按材质名称
+                                : exportOption == rm.GetString("ExportOption_ByID")
+                                    ? i.ToString("D2") + ".fx" // 按ID编号
+                                    : Path.GetFileNameWithoutExtension(materialTextureFile) + ".fx"; // 按图片文件名
+
+                            // 输出路径 - 自定义路径/相对路径
+                            string emdPath = Path.Combine(fxFolderPath, fxFileName).Replace('\\', '/');
+                            if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath)))
                             {
-                                var material = pmx.MaterialList.Span[i];
-                                string materialTextureFile = material.Texture < pmx.TextureList.Length ? pmx.TextureList.Span[material.Texture] : rm.GetString("TextureFileMissing"); // 按图片文件名输出FX
-                                string fxFileName = exportOption == rm.GetString("ExportOption_ByMaterialName") ? material.Name + ".fx" : // 按材质名称输出FX
-                                                    exportOption == rm.GetString("ExportOption_ByID") ? i.ToString("D2") + ".fx" : // 按ID编号输出FX
-                                                    Path.GetFileNameWithoutExtension(materialTextureFile) + ".fx";
-                                emdWriter.WriteLine($"Obj[{i}] = {fxFileName}");
+                                Uri baseUri = new Uri(fxFolderPath + "/");
+                                Uri fileUri = new Uri(emdPath);
+                                emdPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/');
                             }
-                        }
-                        // 如果选择自定义路径，那么贴图文件路径为绝对路径
-                        else
-                        {
-                            for (int i = 0; i < pmx.MaterialList.Length; i++)
-                            {
-                                var material = pmx.MaterialList.Span[i];
-                                string materialTextureFile = material.Texture < pmx.TextureList.Length ? pmx.TextureList.Span[material.Texture] : rm.GetString("TextureFileMissing"); // 按图片文件名输出FX
-                                string fxFileName = exportOption == rm.GetString("ExportOption_ByMaterialName") ? material.Name + ".fx" : // 按材质名称输出FX
-                                                    exportOption == rm.GetString("ExportOption_ByID") ? i.ToString("D2") + ".fx" : // 按ID编号输出FX
-                                                    Path.GetFileNameWithoutExtension(materialTextureFile) + ".fx";
-                                string emdPath = Path.GetFullPath(Path.Combine(fxFolderPath, fxFileName)).Replace('/', '\\'); // 使用绝对路径转义，如：D:\Project\Material.fx
-                                emdWriter.WriteLine($"Obj[{i}] = {emdPath}");
-                            }
+
+                            // 确保路径输出用正确编码
+                            emdWriter.WriteLine($"Obj[{i}] = {emdPath}");
                         }
                     }
-                    // 未选择导出选项或渲染器，弹出提示
-                    //MessageBox.Show(rm.GetString("SelectExportOptionRenderer"), rm.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                else
+                {
+                    // 未选择导出选项或渲染器，弹出提示
+                    MessageBox.Show(rm.GetString("SelectExportOptionRenderer"), rm.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
                 //----------------------------------------
                 // 处理每个材质文件
                 // 根据选择的渲染器和语言，复制对应的材质文件和文件夹
                 //----------------------------------------
-
                 // 读取 CustomRules.ini 文件，解析规则
                 var customRules = ReadCustomRules("CustomRules.ini");
 
@@ -875,9 +848,9 @@ namespace PMX_Material_Tools
                             // 替换光滑度或粗糙度贴图
                             if (smoothnessMatched || roughnessMatched)
                             {
-                                    fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FROM\s+\d+", "#define SMOOTHNESS_MAP_FROM 1");
-                                    string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName; // 优先选择光滑度贴图，如果smoothnessFileName为空，就用roughnessFileName
-                                    fxContent = Regex.Replace(fxContent, @"#define\s+(SMOOTHNESS_MAP_FILE)\s+""([^""]*)""",$"#define SMOOTHNESS_MAP_FILE \"{selectedFile}\"");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FROM\s+\d+", "#define SMOOTHNESS_MAP_FROM 1");
+                                string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName; // 优先选择光滑度贴图，如果smoothnessFileName为空，就用roughnessFileName
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(SMOOTHNESS_MAP_FILE)\s+""([^""]*)""", $"#define SMOOTHNESS_MAP_FILE \"{selectedFile}\"");
                             }
                             // 替换金属度贴图
                             if (metalnessMatched)
@@ -894,6 +867,12 @@ namespace PMX_Material_Tools
                             {
                                 fxContent = Regex.Replace(fxContent, @"#define\s+ALBEDO_SUB_MAP_FROM\s+\d+", "#define ALBEDO_SUB_MAP_FROM 1");
                                 string combinedPath = Path.Combine(textureDirectory, albedoFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/Albedo.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(ALBEDO_SUB_MAP_FILE)\s+""([^""]*)""", $"#define ALBEDO_SUB_MAP_FILE \"{combinedPath}\"");
                             }
                             // 替换法线贴图
@@ -901,21 +880,39 @@ namespace PMX_Material_Tools
                             {
                                 fxContent = Regex.Replace(fxContent, @"#define\s+NORMAL_MAP_FROM\s+\d+", "#define NORMAL_MAP_FROM 1");
                                 string combinedPath = Path.Combine(textureDirectory, normalFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/Normal.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(NORMAL_MAP_FILE)\s+""([^""]*)""", $"#define NORMAL_MAP_FILE \"{combinedPath}\"");
                             }
                             // 替换光滑度或粗糙度贴图
                             if (smoothnessMatched || roughnessMatched)
                             {
-                                    fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FROM\s+\d+", "#define SMOOTHNESS_MAP_FROM 1");
-                                    string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName; // 优先选择光滑度贴图，如果smoothnessFileName为空，就用roughnessFileName
-                                    string combinedPath = Path.Combine(textureDirectory, selectedFile).Replace('\\', '/'); // 路径转义，如：D:/Project/smoothness.png
-                                    fxContent = Regex.Replace(fxContent, @"#define\s+(SMOOTHNESS_MAP_FILE)\s+""([^""]*)""", $"#define SMOOTHNESS_MAP_FILE \"{combinedPath}\"");
+                                fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FROM\s+\d+", "#define SMOOTHNESS_MAP_FROM 1");
+                                string selectedFile = !string.IsNullOrEmpty(smoothnessFileName) ? smoothnessFileName : roughnessFileName; // 优先选择光滑度贴图，如果smoothnessFileName为空，就用roughnessFileName
+                                string combinedPath = Path.Combine(textureDirectory, selectedFile).Replace('\\', '/'); // 路径转义，如：D:/Project/smoothness.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
+                                fxContent = Regex.Replace(fxContent, @"#define\s+(SMOOTHNESS_MAP_FILE)\s+""([^""]*)""", $"#define SMOOTHNESS_MAP_FILE \"{combinedPath}\"");
                             }
                             // 替换金属度贴图
                             if (metalnessMatched)
                             {
                                 fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FROM\s+\d+", "#define METALNESS_MAP_FROM 1");
                                 string combinedPath = Path.Combine(textureDirectory, metalnessFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/metalness.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(METALNESS_MAP_FILE)\s+""([^""]*)""", $"#define METALNESS_MAP_FILE \"{combinedPath}\"");
                             }
                         }
@@ -1105,13 +1102,19 @@ namespace PMX_Material_Tools
 
                         }
                         // 如果选择自定义路径，那么贴图文件路径为绝对路径
-                        else 
+                        else
                         {
                             // 替换高光贴图
                             if (albedoMatched)
                             {
                                 fxContent = Regex.Replace(fxContent, @"#define\s+ALBEDO_MAP_ENABLE\s+\d+", "#define ALBEDO_MAP_ENABLE  1");
                                 string combinedPath = Path.Combine(textureDirectory, albedoFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/Albedo.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_1)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_1   \"{combinedPath}\"");
                             }
                             // 替换法线贴图
@@ -1119,6 +1122,12 @@ namespace PMX_Material_Tools
                             {
                                 fxContent = Regex.Replace(fxContent, @"#define\s+NORMALMAP_ENABLE\s+\d+", "#define NORMALMAP_ENABLE  1");
                                 string combinedPath = Path.Combine(textureDirectory, normalFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/Normal.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(NORMALMAP_MAIN_FILENAME)\s+""([^""]*)""", $"#define NORMALMAP_MAIN_FILENAME  \"{combinedPath}\"");
                             }
                             // 替换金属度贴图
@@ -1127,6 +1136,12 @@ namespace PMX_Material_Tools
                                 fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_ENABLE\s+\d+", "#define METALNESS_MAP_ENABLE  1");
                                 fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FILE\s+\d+", "#define METALNESS_MAP_FILE  2");
                                 string combinedPath = Path.Combine(textureDirectory, metalnessFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/metalness.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_2)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_2  \"{combinedPath}\"");
                             }
                             // 替换光滑度贴图
@@ -1137,6 +1152,12 @@ namespace PMX_Material_Tools
                                 fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_ENABLE\s+\d+", "#define SMOOTHNESS_MAP_ENABLE  1");
                                 fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FILE\s+\d+", "#define SMOOTHNESS_MAP_FILE  3");
                                 string combinedPath = Path.Combine(textureDirectory, selectedFile).Replace('\\', '/'); // 路径转义，如：D:/Project/smoothness.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_3)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_3  \"{combinedPath}\"");
                             }
                             else if (roughnessMatched) //替换粗糙度贴图，只有在没有 smoothness 时才用 roughness
@@ -1146,6 +1167,12 @@ namespace PMX_Material_Tools
                                 fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_ENABLE\s+\d+", "#define SMOOTHNESS_MAP_ENABLE  1");
                                 fxContent = Regex.Replace(fxContent, @"#define\s+SMOOTHNESS_MAP_FILE\s+\d+", "#define SMOOTHNESS_MAP_FILE  3");
                                 string combinedPath = Path.Combine(textureDirectory, selectedFile).Replace('\\', '/'); // 路径转义，如：D:/Project/roughness.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(TEXTURE_FILENAME_3)\s+""([^""]*)""", $"#define TEXTURE_FILENAME_3  \"{combinedPath}\"");
                             }
                         }
@@ -1285,13 +1312,20 @@ namespace PMX_Material_Tools
                             }
                         }
                         // 如果选择自定义路径，那么贴图文件路径为绝对路径
-                        else {
+                        else
+                        {
                             if (albedoMatched)
                             {
                                 // 高光贴图开启
                                 fxContent = Regex.Replace(fxContent, @"#define\s+EMISSIVE_FROM\s+\d+", "#define EMISSIVE_FROM 2");
                                 // 替换高光贴图文件名
                                 string combinedPath = Path.Combine(textureDirectory, albedoFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/Albedo.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(EMISSIVE_TEXTURE)\s+""([^""]*)""", $"#define EMISSIVE_TEXTURE \"{combinedPath}\"");
                             }
                             if (normalMatched)
@@ -1300,6 +1334,12 @@ namespace PMX_Material_Tools
                                 fxContent = Regex.Replace(fxContent, @"#define\s+NORMAL_FROM\s+\d+", "#define NORMAL_FROM 2");
                                 // 替换法线贴图文件名
                                 string combinedPath = Path.Combine(textureDirectory, normalFileName).Replace('\\', '/'); // 路径转义，如：D:/Project/Normal.png
+                                if (fxFolderPath.StartsWith(Path.GetDirectoryName(inputFilePath))) // 如果输出在pmx所在的目录，那么路径就是相对路径
+                                {
+                                    Uri baseUri = new Uri(fxFolderPath + "/");
+                                    Uri fileUri = new Uri(combinedPath);
+                                    combinedPath = baseUri.MakeRelativeUri(fileUri).ToString().Replace('\\', '/'); // 计算相对路径
+                                }
                                 fxContent = Regex.Replace(fxContent, @"#define\s+(NORMAL_TEXTURE)\s+""([^""]*)""", $"#define NORMAL_TEXTURE \"{combinedPath}\"");
                             }
                         }
@@ -1355,41 +1395,41 @@ namespace PMX_Material_Tools
         //=======================================
         // 判断.emd文件的编码语言
         //=======================================
-        // 判断材质名称是否为简体中文
-        private bool IsSimplifiedChinese(string text)
-        {
-            return text.Any(c => c >= 0x4E00 && c <= 0x9FFF);
-        }
-
-        // 判断材质名称是否为繁体中文
-        private bool IsTraditionalChinese(string text)
-        {
-            return text.Any(c => c >= 0x3400 && c <= 0x4DBF);
-        }
-
-        // 判断材质名称是否为日语
-        private bool IsJapanese(string text)
-        {
-            return text.Any(c => (c >= 0x3040 && c <= 0x309F) || (c >= 0x30A0 && c <= 0x30FF) || (c >= 0x31F0 && c <= 0x31FF));
-        }
-
-        // 判断材质名称是否为韩语
-        private bool IsKorean(string text)
-        {
-            return text.Any(c => (c >= 0x1100 && c <= 0x11FF) || (c >= 0x3130 && c <= 0x318F) || (c >= 0xAC00 && c <= 0xD7AF));
-        }
-
-        // 判断材质名称是否为俄语
-        private bool IsRussian(string text)
-        {
-            return text.Any(c => c >= 0x0400 && c <= 0x04FF);
-        }
-
-        // 判断材质名称是否为拉丁字符
-        private bool IsLatin(string text)
-        {
-            return text.Any(c => c >= 0x0020 && c <= 0x007F);
-        }
+        // 判断是否为简体中文
+        //private bool IsSimplifiedChinese(string text)
+        //{
+        //    return text.Any(c => (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0x3400 && c <= 0x4DBF));
+        //}
+        //// 判断是否为繁体中文
+        //private bool IsTraditionalChinese(string text)
+        //{
+        //    return text.Any(c => (c >= 0xF900 && c <= 0xFAFF) || (c >= 0x4E00 && c <= 0x9FFF));
+        //}
+        //// 判断是否为日文
+        //private bool IsJapanese(string text)
+        //{
+        //    return text.Any(c =>
+        //        (c >= 0x3040 && c <= 0x309F) || // 平假名
+        //        (c >= 0x30A0 && c <= 0x30FF) || // 片假名
+        //        (c >= 0xFF66 && c <= 0xFF9F) || // 半角片假名
+        //        (c >= 0x4E00 && c <= 0x9FFF) // 常见汉字区
+        //    );
+        //}
+        //// 判断材质名称是否为韩语
+        //private bool IsKorean(string text)
+        //{
+        //    return text.Any(c => (c >= 0x1100 && c <= 0x11FF) || (c >= 0x3130 && c <= 0x318F) || (c >= 0xAC00 && c <= 0xD7AF));
+        //}
+        //// 判断材质名称是否为俄语
+        //private bool IsRussian(string text)
+        //{
+        //    return text.Any(c => c >= 0x0400 && c <= 0x04FF);
+        //}
+        //// 判断材质名称是否为拉丁字符
+        //private bool IsLatin(string text)
+        //{
+        //    return text.Any(c => c >= 0x0020 && c <= 0x007F);
+        //}
 
         //=======================================
         // CustomRules.ini 自定义重命名规则
