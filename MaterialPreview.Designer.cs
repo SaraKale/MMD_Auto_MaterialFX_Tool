@@ -32,6 +32,11 @@
             this.OutCSVlist = new System.Windows.Forms.Label();
             this.outCSV_button = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.PreviewRM_text = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.ID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.NameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ENG = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -39,11 +44,6 @@
             this.ToonPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SpaPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PreviewList = new System.Windows.Forms.ListView();
-            this.PreviewRM_text = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -90,6 +90,54 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(821, 1029);
             this.tableLayoutPanel1.TabIndex = 6;
+            // 
+            // panel1
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.panel1, 2);
+            this.panel1.Controls.Add(this.PreviewRM_text);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(815, 169);
+            this.panel1.TabIndex = 6;
+            // 
+            // PreviewRM_text
+            // 
+            this.PreviewRM_text.Font = new System.Drawing.Font("宋体", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.PreviewRM_text.Location = new System.Drawing.Point(9, 6);
+            this.PreviewRM_text.Name = "PreviewRM_text";
+            this.PreviewRM_text.Size = new System.Drawing.Size(797, 141);
+            this.PreviewRM_text.TabIndex = 0;
+            this.PreviewRM_text.Text = "材质预览窗口\r\n这是可以预览查看材质的相关列表，同时可以导出 .csv 文件。";
+            this.PreviewRM_text.Click += new System.EventHandler(this.PreviewRM_text_Click);
+            // 
+            // panel2
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.panel2, 2);
+            this.panel2.Controls.Add(this.PreviewList);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(3, 178);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(815, 724);
+            this.panel2.TabIndex = 7;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.OutCSVlist);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(3, 908);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(337, 118);
+            this.panel3.TabIndex = 8;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.outCSV_button);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(346, 908);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(472, 118);
+            this.panel4.TabIndex = 9;
             // 
             // ID
             // 
@@ -142,54 +190,6 @@
             this.PreviewList.View = System.Windows.Forms.View.Details;
             this.PreviewList.SelectedIndexChanged += new System.EventHandler(this.PreviewList_SelectedIndexChanged);
             // 
-            // PreviewRM_text
-            // 
-            this.PreviewRM_text.Font = new System.Drawing.Font("宋体", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.PreviewRM_text.Location = new System.Drawing.Point(9, 6);
-            this.PreviewRM_text.Name = "PreviewRM_text";
-            this.PreviewRM_text.Size = new System.Drawing.Size(797, 141);
-            this.PreviewRM_text.TabIndex = 0;
-            this.PreviewRM_text.Text = "材质预览窗口\r\n这是可以预览查看材质的相关列表，同时可以导出 .csv 文件。";
-            this.PreviewRM_text.Click += new System.EventHandler(this.PreviewRM_text_Click);
-            // 
-            // panel1
-            // 
-            this.tableLayoutPanel1.SetColumnSpan(this.panel1, 2);
-            this.panel1.Controls.Add(this.PreviewRM_text);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(815, 169);
-            this.panel1.TabIndex = 6;
-            // 
-            // panel2
-            // 
-            this.tableLayoutPanel1.SetColumnSpan(this.panel2, 2);
-            this.panel2.Controls.Add(this.PreviewList);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 178);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(815, 724);
-            this.panel2.TabIndex = 7;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.OutCSVlist);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(3, 908);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(337, 118);
-            this.panel3.TabIndex = 8;
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.outCSV_button);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(346, 908);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(472, 118);
-            this.panel4.TabIndex = 9;
-            // 
             // MaterialPreview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
@@ -216,6 +216,10 @@
         private System.Windows.Forms.Button outCSV_button;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label PreviewRM_text;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.ListView PreviewList;
         private System.Windows.Forms.ColumnHeader ID;
         private System.Windows.Forms.ColumnHeader NameColumn;
@@ -223,10 +227,6 @@
         private System.Windows.Forms.ColumnHeader TexPath;
         private System.Windows.Forms.ColumnHeader ToonPath;
         private System.Windows.Forms.ColumnHeader SpaPath;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
     }
 }
 

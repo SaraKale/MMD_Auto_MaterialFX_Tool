@@ -16,6 +16,7 @@ namespace PMX_Material_Tools
     // 材质预览窗口
     public partial class MaterialPreview : Form
     {
+
         // 构造函数，初始化窗口并加载材质信息
         public MaterialPreview(List<MaterialInfo> materialInfoList)
         {
@@ -94,9 +95,9 @@ namespace PMX_Material_Tools
             PreviewList.View = View.Details; // 详细视图模式
             PreviewList.GridLines = true; // 禁用默认网格线（我们手动绘制）
 
-            PreviewList.DrawColumnHeader += PreviewList_DrawColumnHeader;
-            PreviewList.DrawItem += PreviewList_DrawItem;
-            PreviewList.DrawSubItem += PreviewList_DrawSubItem;
+            PreviewList.DrawColumnHeader += PreviewList_DrawColumnHeader; // 自定义绘制列标题
+            PreviewList.DrawItem += PreviewList_DrawItem; // 自定义绘制行
+            //PreviewList.DrawSubItem += PreviewList_DrawSubItem; // 自定义绘制单元格
         }
 
         // 自定义绘制列标题
@@ -120,35 +121,35 @@ namespace PMX_Material_Tools
             e.DrawDefault = true;
         }
 
-        // 自定义绘制单元格
-        // 没有效果，ListView不支持自定义绘制单元格
-        private void PreviewList_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
-        {
-            Rectangle cellBounds = e.Bounds;
+        //// 自定义绘制单元格
+        //// 没有效果，ListView不支持自定义绘制单元格
+        //private void PreviewList_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        //{
+        //    Rectangle cellBounds = e.Bounds;
 
-            // **检查内容是否发生变化**
-            bool isChanged = (e.SubItem.Text.Contains("⚠️") || e.SubItem.Text.Contains("Error"));
+        //    // **检查内容是否发生变化**
+        //    bool isChanged = (e.SubItem.Text.Contains("⚠️") || e.SubItem.Text.Contains("Error"));
 
-            // 设置不同背景色
-            Brush backgroundBrush = isChanged ? Brushes.LightPink : Brushes.White;
-            e.Graphics.FillRectangle(backgroundBrush, cellBounds);
+        //    // 设置不同背景色
+        //    Brush backgroundBrush = isChanged ? Brushes.LightPink : Brushes.White;
+        //    e.Graphics.FillRectangle(backgroundBrush, cellBounds);
 
-            // 设置不同字体大小
-            Font itemFont = isChanged ? new Font(e.Item.Font.FontFamily, 12, FontStyle.Bold) : new Font(e.Item.Font.FontFamily, 12, FontStyle.Regular);
+        //    // 设置不同字体大小
+        //    Font itemFont = isChanged ? new Font(e.Item.Font.FontFamily, 12, FontStyle.Bold) : new Font(e.Item.Font.FontFamily, 12, FontStyle.Regular);
 
-            // 绘制文本
-            using (StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
-            {
-                e.Graphics.DrawString(e.SubItem.Text, itemFont, Brushes.Black, cellBounds, sf);
-            }
+        //    // 绘制文本
+        //    using (StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+        //    {
+        //        e.Graphics.DrawString(e.SubItem.Text, itemFont, Brushes.Black, cellBounds, sf);
+        //    }
 
-            // **手动绘制网格**
-            using (Pen gridPen = new Pen(Color.DarkGray, 1)) // 设置网格线颜色和宽度
-            {
-                e.Graphics.DrawLine(gridPen, cellBounds.Left, cellBounds.Bottom, cellBounds.Right, cellBounds.Bottom);
-                e.Graphics.DrawLine(gridPen, cellBounds.Right, cellBounds.Top, cellBounds.Right, cellBounds.Bottom);
-            }
-        }
+        //    // **手动绘制网格**
+        //    using (Pen gridPen = new Pen(Color.DarkGray, 1)) // 设置网格线颜色和宽度
+        //    {
+        //        e.Graphics.DrawLine(gridPen, cellBounds.Left, cellBounds.Bottom, cellBounds.Right, cellBounds.Bottom);
+        //        e.Graphics.DrawLine(gridPen, cellBounds.Right, cellBounds.Top, cellBounds.Right, cellBounds.Bottom);
+        //    }
+        //}
 
         // 加载材质信息到 ListView
         public void LoadMaterialInfo(List<MaterialInfo> materialInfoList)
@@ -157,6 +158,9 @@ namespace PMX_Material_Tools
 
             foreach (var materialInfo in materialInfoList)
             {
+
+
+                // 创建 ListViewItem 并设置图片索引
                 ListViewItem item = new ListViewItem(new[]
                 {
                     materialInfo.ID,
@@ -175,8 +179,6 @@ namespace PMX_Material_Tools
                 column.Width = -2;
             }
         }
-
-
 
         // 表格列表
         private void PreviewList_SelectedIndexChanged(object sender, EventArgs e)
