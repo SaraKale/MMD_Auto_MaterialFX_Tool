@@ -563,44 +563,6 @@ namespace PMX_Material_Tools
                     encoding = Encoding.GetEncoding("WINDOWS-1252"); // 英文拉丁语
                 }
 
-                //if (exportOption == rm.GetString("ExportOption_ByMaterialName")) // 按材质名称输出FX
-                //{
-                //    // 遍历每个材质，检测材质名称的语言，应对在 MMD 导入 .emd 文件时乱码的问题
-                //    foreach (var material in pmx.MaterialList.Span)
-                //    {
-                //        if (IsSimplifiedChinese(material.Name))
-                //        {
-                //            encoding = Encoding.GetEncoding("GB18030"); // GB18030 包含 GBK 和 GB2312 编码
-                //            break;
-                //        }
-                //        else if (IsTraditionalChinese(material.Name))
-                //        {
-                //            encoding = Encoding.GetEncoding("BIG5"); // BIG5 是繁体中文编码
-                //            break;
-                //        }
-                //        else if (IsJapanese(material.Name))
-                //        {
-                //            encoding = Encoding.GetEncoding("shift_jis"); // Shift-JIS 是日语编码
-                //            break;
-                //        }
-                //        else if (IsKorean(material.Name))
-                //        {
-                //            encoding = Encoding.GetEncoding("EUC-KR"); // EUC-KR 是韩语编码
-                //            break;
-                //        }
-                //        else if (IsRussian(material.Name))
-                //        {
-                //            encoding = Encoding.GetEncoding("KOI8-R"); // KOI8-R 是俄语编码
-                //            break;
-                //        }
-                //        else if (IsLatin(material.Name))
-                //        {
-                //            encoding = Encoding.GetEncoding("WINDOWS-1250"); // WINDOWS-1250 是拉丁语编码
-                //            break;
-                //        }
-                //    }
-                //}
-
                 // 检查是否选择了导出选项和渲染器
                 if (Exportoptions_list.SelectedItem != null && render_list.SelectedItem != null)
                 {
@@ -722,12 +684,8 @@ namespace PMX_Material_Tools
                         string fxContent = File.ReadAllText(destFile1);
 
                         // 获取材质对应的贴图文件
-                        string textureFileName = Path.GetFileNameWithoutExtension(textureFile);
+                        string textureFileName = Path.GetFileName(textureFile);
                         string textureDirectory = Path.GetDirectoryName(Path.Combine(Path.GetDirectoryName(inputFilePath), textureFile));
-
-                        // 使用正则提取文件前缀，支持 "_" 和 "-" 作为分隔符
-                        //Match match = Regex.Match(textureFileName, @"^(.*)[_-]([^_-]+)$");
-                        //string texturePrefix = match.Success ? match.Groups[1].Value : textureFileName;
 
                         // 获取 CustomRules.ini 路径
                         string iniPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CustomRules.ini");
@@ -752,56 +710,61 @@ namespace PMX_Material_Tools
                         foreach (var rule in customRules)
                         {
                             // 查找符合 高光 Specular 规则的文件
-                            var specularFiles = Directory.GetFiles(textureDirectory, $"*{rule.Specular}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (specularFiles.Count > 0)
+                            if (!albedoMatched && !string.IsNullOrEmpty(rule.Specular))
                             {
-                                albedoFileName = Path.GetFileName(specularFiles.First());
-                                albedoMatched = true;
+                                var specularFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Specular}.*").ToList();
+                                if (specularFiles.Any())
+                                {
+                                    albedoFileName = Path.GetFileName(specularFiles.First());
+                                    albedoMatched = true;
+                                }
                             }
 
                             // 查找符合 法线 Normal 规则的文件
-                            var normalFiles = Directory.GetFiles(textureDirectory, $"*{rule.Normal}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (normalFiles.Count > 0)
+                            if (!normalMatched && !string.IsNullOrEmpty(rule.Normal))
                             {
-                                normalFileName = Path.GetFileName(normalFiles.First());
-                                normalMatched = true;
+                                var normalFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Normal}.*").ToList();
+                                if (normalFiles.Any())
+                                {
+                                    normalFileName = Path.GetFileName(normalFiles.First());
+                                    normalMatched = true;
+                                }
                             }
 
                             // 查找符合 光滑度 Smoothness 规则的文件
-                            var smoothnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Smoothness}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (smoothnessFiles.Count > 0)
+                            if (!smoothnessMatched && !string.IsNullOrEmpty(rule.Smoothness))
                             {
-                                smoothnessFileName = Path.GetFileName(smoothnessFiles.First());
-                                smoothnessMatched = true;
+                                var smoothnessFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Smoothness}.*").ToList();
+                                if (smoothnessFiles.Any())
+                                {
+                                    smoothnessFileName = Path.GetFileName(smoothnessFiles.First());
+                                    smoothnessMatched = true;
+                                }
                             }
 
                             // 查找符合 粗糙度 Roughness 规则的文件
-                            var roughnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Roughness}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (roughnessFiles.Count > 0)
+                            if (!roughnessMatched && !string.IsNullOrEmpty(rule.Roughness))
                             {
-                                roughnessFileName = Path.GetFileName(roughnessFiles.First());
-                                roughnessMatched = true;
+                                var roughnessFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Roughness}.*").ToList();
+                                if (roughnessFiles.Any())
+                                {
+                                    roughnessFileName = Path.GetFileName(roughnessFiles.First());
+                                    roughnessMatched = true;
+                                }
                             }
 
                             // 查找符合 金属度 Metalness 规则的文件
-                            var metalnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Metalness}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (metalnessFiles.Count > 0)
+                            if (!metalnessMatched && !string.IsNullOrEmpty(rule.Metalness))
                             {
-                                metalnessFileName = Path.GetFileName(metalnessFiles.First());
-                                metalnessMatched = true;
+                                var metalnessFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Metalness}.*").ToList();
+                                if (metalnessFiles.Any())
+                                {
+                                    metalnessFileName = Path.GetFileName(metalnessFiles.First());
+                                    metalnessMatched = true;
+                                }
                             }
 
-                            // 如果找到了匹配的贴图，则退出循环
+                            // 如果所有贴图都找到了，则可以提前退出循环
                             if (albedoMatched && normalMatched && smoothnessMatched && roughnessMatched && metalnessMatched)
                             {
                                 break;
@@ -941,7 +904,7 @@ namespace PMX_Material_Tools
                         string fxContent = File.ReadAllText(destFile1);
 
                         // 获取材质对应的贴图文件
-                        string textureFileName = Path.GetFileNameWithoutExtension(textureFile);
+                        string textureFileName = Path.GetFileName(textureFile);
                         string textureDirectory = Path.GetDirectoryName(Path.Combine(Path.GetDirectoryName(inputFilePath), textureFile));
 
                         // 获取 CustomRules.ini 路径
@@ -967,56 +930,61 @@ namespace PMX_Material_Tools
                         foreach (var rule in customRules)
                         {
                             // 查找符合 高光 Specular 规则的文件
-                            var specularFiles = Directory.GetFiles(textureDirectory, $"*{rule.Specular}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (specularFiles.Count > 0)
+                            if (!albedoMatched && !string.IsNullOrEmpty(rule.Specular))
                             {
-                                albedoFileName = Path.GetFileName(specularFiles.First());
-                                albedoMatched = true;
+                                var specularFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Specular}.*").ToList();
+                                if (specularFiles.Any())
+                                {
+                                    albedoFileName = Path.GetFileName(specularFiles.First());
+                                    albedoMatched = true;
+                                }
                             }
 
                             // 查找符合 法线 Normal 规则的文件
-                            var normalFiles = Directory.GetFiles(textureDirectory, $"*{rule.Normal}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (normalFiles.Count > 0)
+                            if (!normalMatched && !string.IsNullOrEmpty(rule.Normal))
                             {
-                                normalFileName = Path.GetFileName(normalFiles.First());
-                                normalMatched = true;
+                                var normalFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Normal}.*").ToList();
+                                if (normalFiles.Any())
+                                {
+                                    normalFileName = Path.GetFileName(normalFiles.First());
+                                    normalMatched = true;
+                                }
                             }
 
                             // 查找符合 光滑度 Smoothness 规则的文件
-                            var smoothnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Smoothness}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (smoothnessFiles.Count > 0)
+                            if (!smoothnessMatched && !string.IsNullOrEmpty(rule.Smoothness))
                             {
-                                smoothnessFileName = Path.GetFileName(smoothnessFiles.First());
-                                smoothnessMatched = true;
+                                var smoothnessFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Smoothness}.*").ToList();
+                                if (smoothnessFiles.Any())
+                                {
+                                    smoothnessFileName = Path.GetFileName(smoothnessFiles.First());
+                                    smoothnessMatched = true;
+                                }
                             }
 
                             // 查找符合 粗糙度 Roughness 规则的文件
-                            var roughnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Roughness}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (roughnessFiles.Count > 0)
+                            if (!roughnessMatched && !string.IsNullOrEmpty(rule.Roughness))
                             {
-                                roughnessFileName = Path.GetFileName(roughnessFiles.First());
-                                roughnessMatched = true;
+                                var roughnessFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Roughness}.*").ToList();
+                                if (roughnessFiles.Any())
+                                {
+                                    roughnessFileName = Path.GetFileName(roughnessFiles.First());
+                                    roughnessMatched = true;
+                                }
                             }
 
                             // 查找符合 金属度 Metalness 规则的文件
-                            var metalnessFiles = Directory.GetFiles(textureDirectory, $"*{rule.Metalness}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (metalnessFiles.Count > 0)
+                            if (!metalnessMatched && !string.IsNullOrEmpty(rule.Metalness))
                             {
-                                metalnessFileName = Path.GetFileName(metalnessFiles.First());
-                                metalnessMatched = true;
+                                var metalnessFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Metalness}.*").ToList();
+                                if (metalnessFiles.Any())
+                                {
+                                    metalnessFileName = Path.GetFileName(metalnessFiles.First());
+                                    metalnessMatched = true;
+                                }
                             }
 
-                            // 如果找到了匹配的贴图，则退出循环
+                            // 如果所有贴图都找到了，则可以提前退出循环
                             if (albedoMatched && normalMatched && smoothnessMatched && roughnessMatched && metalnessMatched)
                             {
                                 break;
@@ -1192,7 +1160,7 @@ namespace PMX_Material_Tools
                         string fxContent = File.ReadAllText(destFile1);
 
                         // 获取材质对应的贴图文件
-                        string textureFileName = Path.GetFileNameWithoutExtension(textureFile);
+                        string textureFileName = Path.GetFileName(textureFile);
                         string textureDirectory = Path.GetDirectoryName(Path.Combine(Path.GetDirectoryName(inputFilePath), textureFile));
 
                         // 获取 CustomRules.ini 路径
@@ -1211,24 +1179,26 @@ namespace PMX_Material_Tools
 
                         foreach (var rule in customRules)
                         {
-                            // 查找符合 光滑度 Specular 规则的文件
-                            var specularFiles = Directory.GetFiles(textureDirectory, $"*{rule.Specular}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (specularFiles.Count > 0)
+                            // 查找符合 高光 Specular 规则的文件
+                            if (!albedoMatched && !string.IsNullOrEmpty(rule.Specular))
                             {
-                                albedoFileName = Path.GetFileName(specularFiles.First());
-                                albedoMatched = true;
+                                var specularFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Specular}.*").ToList();
+                                if (specularFiles.Any())
+                                {
+                                    albedoFileName = Path.GetFileName(specularFiles.First());
+                                    albedoMatched = true;
+                                }
                             }
 
                             // 查找符合 法线 Normal 规则的文件
-                            var normalFiles = Directory.GetFiles(textureDirectory, $"*{rule.Normal}.*")
-                                .Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(texturePrefix))
-                                .ToList();
-                            if (normalFiles.Count > 0)
+                            if (!normalMatched && !string.IsNullOrEmpty(rule.Normal))
                             {
-                                normalFileName = Path.GetFileName(normalFiles.First());
-                                normalMatched = true;
+                                var normalFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Normal}.*").ToList();
+                                if (normalFiles.Any())
+                                {
+                                    normalFileName = Path.GetFileName(normalFiles.First());
+                                    normalMatched = true;
+                                }
                             }
 
                             // 如果找到了匹配的高光 Specular 和法线 Normal 贴图，则退出循环
