@@ -476,4 +476,8 @@ This is a list of related materials that can be previewed and viewed, and a. csv
     <value>notice</value>
     <comment>通知消息框</comment>
   </data>
+  <data name="SelectExportOptionRenderer" xml:space="preserve">
+    <value>No renderer or export options selected</value>
+    <comment>没有选择渲染器和导出选项</comment>
+  </data>
 </root>

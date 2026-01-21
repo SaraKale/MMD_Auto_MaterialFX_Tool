@@ -378,7 +378,7 @@
     <value>解析PMX文件错误</value>
   </data>
   <data name="FileCopySuccessMessage" xml:space="preserve">
-    <value>文件复制成功消息框</value>
+    <value>文件复制成功</value>
   </data>
   <data name="FileInUseConsoleMessage" xml:space="preserve">
     <value>文件被占用，等待 {0} 毫秒后重试..</value>
@@ -388,5 +388,8 @@
   </data>
   <data name="notice" xml:space="preserve">
     <value>通知</value>
+  </data>
+  <data name="SelectExportOptionRenderer" xml:space="preserve">
+    <value>没有选择渲染器和导出选项</value>
   </data>
 </root>

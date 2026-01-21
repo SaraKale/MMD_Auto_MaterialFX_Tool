@@ -57,6 +57,8 @@ namespace PMX_Material_Tools
             tooltipBubble.Visible = false; // 初始状态下，提示框是隐藏的，只有当鼠标悬停时才会显示
             this.Controls.Add(tooltipBubble); // 将 ToolTipBubble 控件添加到窗体中
 
+            this.StartPosition = FormStartPosition.CenterScreen; // 主窗体居中显示
+
             // 批量绑定控件与提示文本
             BindControlTooltips();
 
@@ -701,11 +703,13 @@ namespace PMX_Material_Tools
                         string smoothnessFileName = "";
                         string roughnessFileName = "";
                         string metalnessFileName = "";
+                        string OcclusionFileName = "";
                         bool albedoMatched = false;
                         bool normalMatched = false;
                         bool smoothnessMatched = false;
                         bool roughnessMatched = false;
                         bool metalnessMatched = false;
+                        bool OcclusionMatched = false;
 
                         foreach (var rule in customRules)
                         {
@@ -764,6 +768,17 @@ namespace PMX_Material_Tools
                                 }
                             }
 
+                            // 查找符合 环境光遮蔽 Occlusion 规则的文件
+                            if (!OcclusionMatched && !string.IsNullOrEmpty(rule.Occlusion))
+                            {
+                                var OcclusionFiles = Directory.GetFiles(textureDirectory, $"{texturePrefix}{rule.Occlusion}.*").ToList();
+                                if (OcclusionFiles.Any())
+                                {
+                                    OcclusionFileName = Path.GetFileName(OcclusionFiles.First());
+                                    OcclusionMatched = true;
+                                }
+                            }
+
                             // 如果所有贴图都找到了，则可以提前退出循环
                             if (albedoMatched && normalMatched && smoothnessMatched && roughnessMatched && metalnessMatched)
                             {
@@ -808,6 +823,11 @@ namespace PMX_Material_Tools
                                 fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FROM\s+\d+", "#define METALNESS_MAP_FROM 1"); // 开启金属度贴图
                                 fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FILE\s+""([^""]*)""", $"#define METALNESS_MAP_FILE \"{metalnessFileName}\""); // 替换金属度贴图文件路径
                             }
+                            if (OcclusionMatched)  // 替换环境光遮蔽贴图
+                            {
+                                fxContent = Regex.Replace(fxContent, @"#define\s+OCCLUSION_MAP_FROM\s+\d+", "#define OCCLUSION_MAP_FROM 1"); // 开启环境光遮蔽贴图
+                                fxContent = Regex.Replace(fxContent, @"#define\s+OCCLUSION_MAP_FILE\s+""([^""]*)""", $"#define OCCLUSION_MAP_FILE \"{OcclusionFileName}\""); // 替换环境光遮蔽贴图文件路径
+                            }
                         }
                         // 如果选择自定义路径，那么贴图文件路径为相对路径或绝对路径
                         else
@@ -836,6 +856,12 @@ namespace PMX_Material_Tools
                                 fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FROM\s+\d+", "#define METALNESS_MAP_FROM 1"); // 开启金属度贴图
                                 string path = GetRelativeOrAbsolutePath(metalnessFileName);
                                 fxContent = Regex.Replace(fxContent, @"#define\s+METALNESS_MAP_FILE\s+""([^""]*)""", $"#define METALNESS_MAP_FILE \"{path}\""); // 替换金属度贴图文件路径
+                            }
+                            if (OcclusionMatched)  // 替换环境光遮蔽贴图
+                            {
+                                fxContent = Regex.Replace(fxContent, @"#define\s+OCCLUSION_MAP_FROM\s+\d+", "#define OCCLUSION_MAP_FROM 1"); // 开启环境光遮蔽贴图
+                                string path = GetRelativeOrAbsolutePath(OcclusionFileName);
+                                fxContent = Regex.Replace(fxContent, @"#define\s+OCCLUSION_MAP_FILE\s+""([^""]*)""", $"#define OCCLUSION_MAP_FILE \"{path}\""); // 替换环境光遮蔽贴图文件路径
                             }
                         }
 
@@ -1391,6 +1417,9 @@ namespace PMX_Material_Tools
                             case "Metalness":
                                 currentRule.Metalness = value;
                                 break;
+                            case "Occlusion":
+                                currentRule.Occlusion = value;
+                                break;
                         }
                     }
                 }
@@ -1409,6 +1438,7 @@ namespace PMX_Material_Tools
             public string Smoothness { get; set; } // 光滑度
             public string Roughness { get; set; } // 粗糙度
             public string Metalness { get; set; } // 金属度
+            public string Occlusion { get; set; } // 环境光遮蔽
         }
 
         // 读取 ini 文件中所有材质后缀（例如 _D, _N 等）

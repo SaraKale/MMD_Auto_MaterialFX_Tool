@@ -391,4 +391,7 @@ txtと.emdマテリアル情報ファイルを直接出力し、
   <data name="notice" xml:space="preserve">
     <value>に知らせる</value>
   </data>
+  <data name="SelectExportOptionRenderer" xml:space="preserve">
+    <value>レンダラーとエクスポートオプションが選択されていません</value>
+  </data>
 </root>

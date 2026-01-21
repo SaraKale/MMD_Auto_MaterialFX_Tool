@@ -210,9 +210,9 @@ namespace PMX_Material_Tools
             this.versionText.Location = new System.Drawing.Point(467, 307);
             this.versionText.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.versionText.Name = "versionText";
-            this.versionText.Size = new System.Drawing.Size(49, 14);
+            this.versionText.Size = new System.Drawing.Size(35, 14);
             this.versionText.TabIndex = 14;
-            this.versionText.Text = "v0.0.9";
+            this.versionText.Text = "v1.0";
             this.versionText.Click += new System.EventHandler(this.versionText_Click);
             // 
             // exportoption_text
@@ -231,7 +231,7 @@ namespace PMX_Material_Tools
             this.Exportoptions_list.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Exportoptions_list.FormattingEnabled = true;
             this.Exportoptions_list.Location = new System.Drawing.Point(117, 243);
-            this.Exportoptions_list.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Exportoptions_list.Margin = new System.Windows.Forms.Padding(2);
             this.Exportoptions_list.Name = "Exportoptions_list";
             this.Exportoptions_list.Size = new System.Drawing.Size(182, 24);
             this.Exportoptions_list.TabIndex = 16;
@@ -242,7 +242,7 @@ namespace PMX_Material_Tools
             this.directoverwrite_text.AutoSize = true;
             this.directoverwrite_text.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.directoverwrite_text.Location = new System.Drawing.Point(182, 174);
-            this.directoverwrite_text.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.directoverwrite_text.Margin = new System.Windows.Forms.Padding(2);
             this.directoverwrite_text.Name = "directoverwrite_text";
             this.directoverwrite_text.Size = new System.Drawing.Size(90, 20);
             this.directoverwrite_text.TabIndex = 18;
@@ -255,7 +255,7 @@ namespace PMX_Material_Tools
             this.ExportAfterFolder_text.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ExportAfterFolder_text.Font = new System.Drawing.Font("宋体", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ExportAfterFolder_text.Location = new System.Drawing.Point(334, 248);
-            this.ExportAfterFolder_text.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ExportAfterFolder_text.Margin = new System.Windows.Forms.Padding(2);
             this.ExportAfterFolder_text.Name = "ExportAfterFolder_text";
             this.ExportAfterFolder_text.Size = new System.Drawing.Size(182, 48);
             this.ExportAfterFolder_text.TabIndex = 19;
@@ -269,7 +269,7 @@ namespace PMX_Material_Tools
             this.Packimages.AutoSize = true;
             this.Packimages.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Packimages.Location = new System.Drawing.Point(334, 174);
-            this.Packimages.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Packimages.Margin = new System.Windows.Forms.Padding(2);
             this.Packimages.Name = "Packimages";
             this.Packimages.Size = new System.Drawing.Size(186, 20);
             this.Packimages.TabIndex = 20;
@@ -281,7 +281,7 @@ namespace PMX_Material_Tools
             this.Preview.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.Preview.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Preview.Location = new System.Drawing.Point(494, 68);
-            this.Preview.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Preview.Margin = new System.Windows.Forms.Padding(2);
             this.Preview.Name = "Preview";
             this.Preview.Size = new System.Drawing.Size(29, 30);
             this.Preview.TabIndex = 21;
