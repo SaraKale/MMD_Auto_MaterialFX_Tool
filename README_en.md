@@ -17,7 +17,7 @@
 
 This tool is designed for users who need to organize PMX file materials and export .FX files, aiming to simplify tedious manual operations and significantly improve work efficiency.
 
-Suitable for: Models with built-in specular and normal maps, or users who have created their own specular and normal map files.
+Applicable to: Models with multiple types of maps (PBR), such as diffuse, specular, normal, shininess, roughness, metallicness, ambient occlusion maps, etc.
 
 ## Key Features
 
@@ -105,7 +105,15 @@ dotnet build PMX Material Tools.csproj --framework net48
 
 4. Select Renderer:
    - Choose your main renderer. If no option is selected, it defaults to none, and only outputs the `MaterialInfo.txt` file.
-   - Selecting any option will output the relevant **.fxsub / .fx** files, automatically renamed based on the texture file names. If the file names end with specular map `_s`/`_Specular` or normal map `_n`/`_Normal`, the tool will automatically add the relevant file paths in the .fx file. However, these names are not universal, so you may need to modify them. If errors occur, please check the texture file names or add custom renaming rules in `CustomRules.ini`.
+   - Selecting any option will output the relevant **.fxsub / .fx** file, which will be automatically renamed to the same name based on the texture file name. If the file name ends with the following names, the relevant file name path will be automatically added to the fx file. Of course, this name is not universal and needs to be modified specifically by yourself. If there are errors, please check the texture file name. Alternatively, you can add custom rename rules to `CustomRules.ini` yourself.
+   - Adapted rule name:
+      - Diffuse map d/Diffuse
+      - Specular map/Specular
+      - Normal map n/Normal
+      - Smoothness map sm/Smoothness
+      - Roughness map r/Roughness
+      - Metalness map m/Metalness
+      - Ambient Occlusion Map (Ao/Occlusion)
    - It should be noted that due to the language limitation of MMD, it cannot support more encoding languages. The only solution is to change the texture file name to English, and be careful not to include other non English characters in the path before.
      - Currently supported renderers:
      - Ray-MMD
