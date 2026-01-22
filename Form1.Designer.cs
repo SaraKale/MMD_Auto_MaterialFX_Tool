@@ -52,6 +52,7 @@ namespace PMX_Material_Tools
             this.ExportAfterFolder_text = new System.Windows.Forms.CheckBox();
             this.Packimages = new System.Windows.Forms.CheckBox();
             this.Preview = new System.Windows.Forms.Button();
+            this.OpenCustomINIFILE = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // note_button
@@ -156,7 +157,7 @@ namespace PMX_Material_Tools
             this.export_button.Name = "export_button";
             this.export_button.Size = new System.Drawing.Size(132, 32);
             this.export_button.TabIndex = 9;
-            this.export_button.Text = "输出";
+            this.export_button.Text = "导出";
             this.export_button.UseVisualStyleBackColor = true;
             this.export_button.Click += new System.EventHandler(this.export_button_Click);
             // 
@@ -212,7 +213,7 @@ namespace PMX_Material_Tools
             this.versionText.Name = "versionText";
             this.versionText.Size = new System.Drawing.Size(35, 14);
             this.versionText.TabIndex = 14;
-            this.versionText.Text = "v1.0";
+            this.versionText.Text = "v1.1";
             this.versionText.Click += new System.EventHandler(this.versionText_Click);
             // 
             // exportoption_text
@@ -289,11 +290,23 @@ namespace PMX_Material_Tools
             this.Preview.UseVisualStyleBackColor = true;
             this.Preview.Click += new System.EventHandler(this.Preview_Click);
             // 
+            // OpenCustomINIFILE
+            // 
+            this.OpenCustomINIFILE.Font = new System.Drawing.Font("宋体", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.OpenCustomINIFILE.Location = new System.Drawing.Point(31, 291);
+            this.OpenCustomINIFILE.Name = "OpenCustomINIFILE";
+            this.OpenCustomINIFILE.Size = new System.Drawing.Size(120, 32);
+            this.OpenCustomINIFILE.TabIndex = 22;
+            this.OpenCustomINIFILE.Text = "查看编辑命名规则";
+            this.OpenCustomINIFILE.UseVisualStyleBackColor = true;
+            this.OpenCustomINIFILE.Click += new System.EventHandler(this.OpenCustomINIFILE_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(543, 342);
+            this.Controls.Add(this.OpenCustomINIFILE);
             this.Controls.Add(this.Preview);
             this.Controls.Add(this.Packimages);
             this.Controls.Add(this.ExportAfterFolder_text);
@@ -349,5 +362,6 @@ namespace PMX_Material_Tools
         private System.Windows.Forms.CheckBox ExportAfterFolder_text;
         private System.Windows.Forms.CheckBox Packimages;
         private System.Windows.Forms.Button Preview;
+        private System.Windows.Forms.Button OpenCustomINIFILE;
     }
 }

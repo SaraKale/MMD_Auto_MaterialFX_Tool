@@ -55,10 +55,10 @@
 // Enable toon shading
 // 0: Disabled
 // 1: Enabled
-#define TOON_ENABLE 1
+#define TOON_ENABLE 0
 
 // Shadow threshold
-#define ToonThreshold 0.2
+#define ToonThreshold 0.0
 
 // Shadow hint texture
 // Uses the same shading hint format as AlternativeFull, can be replaced

@@ -125,6 +125,7 @@ namespace PMX_Material_Tools
                     Packimages.Text = rm.GetString("Packagingimages"); // 复制图片到输出路径
                     ExportAfterFolder_text.Text = rm.GetString("ExportOpenAfterFolder"); // 输出后自动打开文件夹
                     directoverwrite_text.Text = rm.GetString("DirectOverWrite"); // 源文件夹
+                    OpenCustomINIFILE.Text = rm.GetString("OpenCustomINIFILE"); // 查看编辑命名规则
 
                     // 更新材质语言列表
                     Meteriallang_button.Items.Clear();

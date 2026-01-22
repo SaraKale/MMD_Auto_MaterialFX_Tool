@@ -392,4 +392,13 @@
   <data name="SelectExportOptionRenderer" xml:space="preserve">
     <value>沒有選擇渲染器和導出選項</value>
   </data>
+  <data name="FileNotFailure" xml:space="preserve">
+    <value>打開文件失敗</value>
+  </data>
+  <data name="CustominiPathError" xml:space="preserve">
+    <value>未找到文件：{0}\n請確認文件路徑是否正確</value>
+  </data>
+  <data name="OpenCustomINIFILE" xml:space="preserve">
+    <value>查看編輯命名規則</value>
+  </data>
 </root>

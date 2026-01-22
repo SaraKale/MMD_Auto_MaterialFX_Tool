@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -1590,7 +1591,43 @@ namespace PMX_Material_Tools
             }
         }
 
-        //================ END =======================
+        // CustomRules.ini 文件按钮点击事件
+        private void OpenCustomINIFILE_Click(object sender, EventArgs e)
+        {
+            // 链接 ResourceManager 语言文件
+            ResourceManager rm = new ResourceManager("PMX_Material_Tools.languagelist.Resources", Assembly.GetExecutingAssembly());
+
+            // CustomRules.ini 路径
+            string iniFilePath = Path.Combine(Application.StartupPath, "CustomRules.ini");
+
+            try
+            {
+                // 检查文件是否存在
+                if (!File.Exists(iniFilePath))
+                {
+                    // MessageBox.Show($"未找到文件：{iniFilePath}\n请确认文件路径是否正确", "提示",MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(rm.GetString("CustominiPathError"), rm.GetString("notice"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // 调用记事本程序打开指定的INI文件
+                // notepad.exe 是系统记事本的固定名称，/A 参数表示以ANSI编码打开（可选）
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "notepad.exe",
+                    Arguments = $"\"{iniFilePath}\"", // 路径加双引号，避免路径含空格时出错
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                // 文件打开失败，弹出提示：文件未找到
+                MessageBox.Show(string.Format(rm.GetString("FileNotFailure"), ex.Message), rm.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
+
+        //================ END =======================
 }
+
 

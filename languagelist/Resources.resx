@@ -480,4 +480,16 @@ This is a list of related materials that can be previewed and viewed, and a. csv
     <value>No renderer or export options selected</value>
     <comment>没有选择渲染器和导出选项</comment>
   </data>
+  <data name="FileNotFailure" xml:space="preserve">
+    <value>Failed to open the file</value>
+    <comment>打开文件失败</comment>
+  </data>
+  <data name="CustominiPathError" xml:space="preserve">
+    <value>File Not Found: {0} N make sure the file path is correct</value>
+    <comment>未找到文件：{iniFilePath}\n請確認文件路徑是否正確</comment>
+  </data>
+  <data name="OpenCustomINIFILE" xml:space="preserve">
+    <value>View/Edit Name</value>
+    <comment>查看编辑命名规则</comment>
+  </data>
 </root>

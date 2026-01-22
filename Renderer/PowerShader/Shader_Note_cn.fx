@@ -56,10 +56,10 @@
 // 是否进行Toon着色
 // 0: 不做
 // 1: 做
-#define TOON_ENABLE 1
+#define TOON_ENABLE 0
 
 // 影子范围
-#define ToonThreshold 0.2
+#define ToonThreshold 0.0
 
 // 阴影提示纹理
 // 与AlternativeFull的着色提示规格相同，可替换

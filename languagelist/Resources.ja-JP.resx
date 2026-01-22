@@ -143,7 +143,7 @@
     <value>エクスポート後にフォルダを開く</value>
   </data>
   <data name="exportoptiontext" xml:space="preserve">
-    <value>選択項目のエクスポート</value>
+    <value>選択肢</value>
   </data>
   <data name="ExportOption_ByID" xml:space="preserve">
     <value>FXをID番号で出力</value>
@@ -393,5 +393,14 @@ txtと.emdマテリアル情報ファイルを直接出力し、
   </data>
   <data name="SelectExportOptionRenderer" xml:space="preserve">
     <value>レンダラーとエクスポートオプションが選択されていません</value>
+  </data>
+  <data name="FileNotFailure" xml:space="preserve">
+    <value>ファイルを開くことができない</value>
+  </data>
+  <data name="CustominiPathError" xml:space="preserve">
+    <value>ファイルが見つかりません:{0}\n ファイルパスが正しいことを確認してください。</value>
+  </data>
+  <data name="OpenCustomINIFILE" xml:space="preserve">
+    <value>編集名を表示する</value>
   </data>
 </root>
