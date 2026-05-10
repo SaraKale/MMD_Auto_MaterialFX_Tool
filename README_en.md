@@ -224,7 +224,7 @@ GitHub Copilot
 
 ## License
 
-Licensed under [MIT License](LICENSE)
+Licensed under [CC BY-NC-SA 4.0](LICENSE)
 
 ## Screenshots
 

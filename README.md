@@ -222,7 +222,7 @@ Github Copilot
 
 ## 许可证
 
-使用 [MIT License](LICENSE) 许可证
+使用 [CC BY-NC-SA 4.0](LICENSE) 许可证
 
 ## 截图展示
 
