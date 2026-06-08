@@ -114,9 +114,11 @@ dotnet build PMX Material Tools.csproj --framework net48
       - 环境光遮蔽贴图 Ao/Occlusion
    - 需要註意的是：由於MMD的語言限製，無法支持更多的編碼語言，只能將貼圖文件名修改為英文才可以解決，註意前面路徑也不要出現其他非英文字符。
      - 目前有以下渲染：
-     - Ray-MMD 
-     - ikPolishShader
-     - PowerShader
+     - Ray-MMD  by:Rui
+     - Ray-MMD 乘算/加算Sph by:三金絡合物
+     - ikPolishShader by:ikeno
+     - PowerShader by:角砂糖
+     - 使用這些材質文件請註明這些作者。
 
 - 5、含註釋：
    - 如果勾選註釋說明，同時選擇了“**FX文本語言**”，會輸出含有註釋說明的文件。
@@ -142,6 +144,8 @@ dotnet build PMX Material Tools.csproj --framework net48
    - "按圖片文件名輸出FX"：輸出以貼圖文件名命名的.fx文件。
    - "按材質名稱輸出FX"：輸出以材質名稱命名的.fx文件。
    - "按ID編號輸出FX"：輸出以ID數字編號命名的.fx文件。    
+   - "ID編號+材質名稱輸出FX"：輸出以ID數字編號和材質名稱組合命名的.fx文件。    
+   
 - 9、輸出後自動打開文件夾：
    - 當輸出成功後會自動打開導出的文件夾。
 
@@ -193,11 +197,14 @@ A：當然可以！請給我留言，我會在後續新增。
 
 Ray-MMD v1.5.2 	by:Rui  
 https://github.com/ray-cast/ray-mmd  
+Ray-MMD 乘算/加算Sph by:三金络合物
+https://www.bilibili.com/opus/662110371692150788
 ikPolishShader v_028	by:ikeno  
 https://ux.getuploader.com/ikeno/  
 PowerShader v3.2		by:角砂糖  
 https://bowlroll.net/file/195743  
 
+使用这些材质文件请注明这些作者。
 如果有需要添加的渲染器可以告知我，我會添加上去，不過還是要查看作者是否允許分發。
 
 ## 使用事項

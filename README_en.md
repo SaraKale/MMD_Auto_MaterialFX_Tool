@@ -116,9 +116,11 @@ dotnet build PMX Material Tools.csproj --framework net48
       - Ambient Occlusion Map (Ao/Occlusion)
    - It should be noted that due to the language limitation of MMD, it cannot support more encoding languages. The only solution is to change the texture file name to English, and be careful not to include other non English characters in the path before.
      - Currently supported renderers:
-     - Ray-MMD
-     - ikPolishShader
-     - PowerShader
+     - Ray-MMD  by:Rui
+     - Ray-MMD Multiply/Add Sph by:三金络合物
+     - ikPolishShader by:ikeno
+     - PowerShader by:角砂糖
+     - Please credit the authors when using these texture files。
 
 5. Include Comments:
    - If you check the comment option and select "**FX Text Language**", the output files will include comments.
@@ -144,7 +146,8 @@ dotnet build PMX Material Tools.csproj --framework net48
    - "ImageFilename to FX": Outputs .fx files named after the texture file names.
    - "MaterialName to FX": Outputs .fx files named after the material names.
    - "IDNumber to FX": Outputs .fx files named after the ID numbers.
-
+   - "ID + MaterialName to FX": Output an .fx file named by combining the ID number and material name.     
+   
 9. Automatically Open Folder After Export:
    - After successful export, the folder will automatically open.
 
@@ -195,11 +198,14 @@ Currently confirmed renderers that can distribute material files:
 
 Ray-MMD v1.5.2 by: Rui  
 https://github.com/ray-cast/ray-mmd  
+Ray-MMD Multiply/Add Sph by:三金络合物
+https://www.bilibili.com/opus/662110371692150788
 ikPolishShader v_028 by: ikeno  
 https://ux.getuploader.com/ikeno/  
 PowerShader v3.2 by: 角砂糖  
 https://bowlroll.net/file/195743  
 
+Please indicate the authors when using these material files.
 If you need to add other renderers, please let me know, and I will add them, provided the author allows distribution.
 
 ## Usage Terms

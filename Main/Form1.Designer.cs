@@ -213,7 +213,7 @@ namespace PMX_Material_Tools
             this.versionText.Name = "versionText";
             this.versionText.Size = new System.Drawing.Size(35, 14);
             this.versionText.TabIndex = 14;
-            this.versionText.Text = "v1.1";
+            this.versionText.Text = "v1.2";
             this.versionText.Click += new System.EventHandler(this.versionText_Click);
             // 
             // exportoption_text

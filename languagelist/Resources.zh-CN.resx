@@ -146,13 +146,13 @@
     <value>导出选项</value>
   </data>
   <data name="ExportOption_ByID" xml:space="preserve">
-    <value>按ID编号输出FX</value>
+    <value>ID编号输出FX</value>
   </data>
   <data name="ExportOption_ByImageName" xml:space="preserve">
-    <value>按图片文件名输出FX</value>
+    <value>图片文件名输出FX</value>
   </data>
   <data name="ExportOption_ByMaterialName" xml:space="preserve">
-    <value>按材质名称输出FX</value>
+    <value>材质名称输出FX</value>
   </data>
   <data name="ExportOption_None" xml:space="preserve">
     <value>无</value>
@@ -160,9 +160,10 @@
   <data name="exportoption_tips" xml:space="preserve">
     <value>导出时可以按照喜好选择：
 "无"：不设定，默认输出。
-"按图片文件名输出FX"：输出以贴图文件名命名的.fx文件。
-"按材质名称输出FX"：输出以材质名称命名的.fx文件。
-"按ID编号输出FX"：输出以ID数字编号命名的.fx文件。</value>
+"图片文件名输出FX"：输出以贴图文件名命名的.fx文件。
+"材质名称输出FX"：输出以材质名称命名的.fx文件。
+"ID编号输出FX"：输出以ID数字编号命名的.fx文件。
+"ID编号+材质名称输出FX"：输出以ID数字编号和材质名称组合命名的.fx文件。</value>
   </data>
   <data name="ExportSuccess" xml:space="preserve">
     <value>材质和纹理导出成功！</value>
@@ -400,5 +401,11 @@
   </data>
   <data name="OpenCustomINIFILE" xml:space="preserve">
     <value>查看编辑命名规则</value>
+  </data>
+  <data name="ExportOption_ByIDAndMaterialName" xml:space="preserve">
+    <value>ID编号+材质名称输出FX</value>
+  </data>
+  <data name="Renderer_RaySJMatcap" xml:space="preserve">
+    <value>Ray-MMD 乘算/加算Sph</value>
   </data>
 </root>

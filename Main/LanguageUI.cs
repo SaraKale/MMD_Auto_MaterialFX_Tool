@@ -142,6 +142,7 @@ namespace PMX_Material_Tools
                     render_list.Items.AddRange(new string[] {
                         rm.GetString("Renderer_None"), // 无
                         rm.GetString("Renderer_RayMMD"),
+                        rm.GetString("Renderer_RaySJMatcap"), //Ray乘算/加算Sph by三金络合物
                         rm.GetString("Renderer_ikPolishShader"),
                         rm.GetString("Renderer_PowerShader")
                     });
@@ -150,9 +151,10 @@ namespace PMX_Material_Tools
                     Exportoptions_list.Items.Clear();
                     Exportoptions_list.Items.AddRange(new string[] {
                         rm.GetString("ExportOption_None"), // 无
-                        rm.GetString("ExportOption_ByImageName"), // 按图片文件名输出FX
-                        rm.GetString("ExportOption_ByMaterialName"), // 按材质名称输出FX
-                        rm.GetString("ExportOption_ByID") // 按ID编号输出FX
+                        rm.GetString("ExportOption_ByImageName"), // 图片文件名输出FX
+                        rm.GetString("ExportOption_ByMaterialName"), // 材质名称输出FX
+                        rm.GetString("ExportOption_ByID"), // ID编号输出FX
+                        rm.GetString("ExportOption_ByIDAndMaterialName") // ID编号+材质名称输出FX
                     });
 
                     // 更新气泡提示文本

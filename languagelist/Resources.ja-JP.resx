@@ -355,7 +355,7 @@ txtと.emdマテリアル情報ファイルを直接出力し、
     <value>保存</value>
   </data>
   <data name="RreviewRMTips" xml:space="preserve">
-    <value>マテリアルプレビューウィンドウ
+    <value>
 これは、モデルマテリアルをプレビュー表示することができる関連リストであり、.csvファイルをエクスポートすることもできます。</value>
   </data>
   <data name="MaterialPreviewTitle" xml:space="preserve">
@@ -402,5 +402,11 @@ txtと.emdマテリアル情報ファイルを直接出力し、
   </data>
   <data name="OpenCustomINIFILE" xml:space="preserve">
     <value>編集名を表示する</value>
+  </data>
+  <data name="ExportOption_ByIDAndMaterialName" xml:space="preserve">
+    <value>ID 番号+マテリアル名出力FX</value>
+  </data>
+  <data name="Renderer_RaySJMatcap" xml:space="preserve">
+    <value>Ray-MMD 乗算/加算Sph</value>
   </data>
 </root>

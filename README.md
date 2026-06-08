@@ -114,9 +114,11 @@ dotnet build PMX Material Tools.csproj --framework net48
       - 环境光遮蔽贴图 Ao/Occlusion
    - 需要注意的是：由于MMD的语言限制，无法支持更多的编码语言，只能将贴图文件名修改为英文才可以解决，注意前面路径也不要出现其他非英文字符。
      - 目前有以下渲染：
-     - Ray-MMD 
-     - ikPolishShader
-     - PowerShader
+     - Ray-MMD  by:Rui
+     - Ray-MMD 乘算/加算Sph by:三金络合物
+     - ikPolishShader by:ikeno
+     - PowerShader by:角砂糖
+     - 使用这些材质文件请注明这些作者。
 
 - 5、含注释：
    - 如果勾选注释说明，同时选择了“**FX文本语言**”，会输出含有注释说明的文件。
@@ -139,9 +141,11 @@ dotnet build PMX Material Tools.csproj --framework net48
 - 8、导出选项：
    - 导出时可以按照喜好选择：
    - "无"：默认只输出 MaterialInfo.txt 文件。
-   - "按图片文件名输出FX"：输出以贴图文件名命名的.fx文件。
-   - "按材质名称输出FX"：输出以材质名称命名的.fx文件。
-   - "按ID编号输出FX"：输出以ID数字编号命名的.fx文件。    
+   - "图片文件名输出FX"：输出以贴图文件名命名的.fx文件。
+   - "材质名称输出FX"：输出以材质名称命名的.fx文件。
+   - "ID编号输出FX"：输出以ID数字编号命名的.fx文件。    
+   - "ID编号+材质名称输出FX"：输出以ID数字编号和材质名称组合命名的.fx文件。    
+   
 - 9、输出后自动打开文件夹：
    - 当输出成功后会自动打开导出的文件夹。
 
@@ -193,11 +197,14 @@ A：当然可以！请给我留言，我会在后续新增。
 
 Ray-MMD v1.5.2 	by:Rui  
 https://github.com/ray-cast/ray-mmd  
+Ray-MMD 乘算/加算Sph by:三金络合物  
+https://www.bilibili.com/opus/662110371692150788  
 ikPolishShader v_028	by:ikeno  
 https://ux.getuploader.com/ikeno/  
 PowerShader v3.2		by:角砂糖  
 https://bowlroll.net/file/195743  
 
+使用这些材质文件请注明这些作者。  
 如果有需要添加的渲染器可以告知我，我会添加上去，不过还是要查看作者是否允许分发。
 
 ## 使用事项

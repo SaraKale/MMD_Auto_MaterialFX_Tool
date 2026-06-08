@@ -492,4 +492,12 @@ This is a list of related materials that can be previewed and viewed, and a. csv
     <value>View/Edit Name</value>
     <comment>查看编辑命名规则</comment>
   </data>
+  <data name="ExportOption_ByIDAndMaterialName" xml:space="preserve">
+    <value>ID+MaterialName to FX</value>
+    <comment>ID编号+材质名称输出FX</comment>
+  </data>
+  <data name="Renderer_RaySJMatcap" xml:space="preserve">
+    <value>Ray-MMD multiply/add Sph</value>
+    <comment>Ray-MMD 乘算/加算Sph</comment>
+  </data>
 </root>

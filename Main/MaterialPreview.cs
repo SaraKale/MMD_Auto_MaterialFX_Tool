@@ -158,9 +158,7 @@ namespace PMX_Material_Tools
 
             foreach (var materialInfo in materialInfoList)
             {
-
-
-                // 创建 ListViewItem 并设置图片索引
+                // 创建 ListViewItem 
                 ListViewItem item = new ListViewItem(new[]
                 {
                     materialInfo.ID,
